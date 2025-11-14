@@ -6,7 +6,6 @@ import { useMood } from "../../store/useMood";
 
 export default function Profile() {
   const mood = useMood((state) => state.mood);
-
   const bgColors = moodColors[mood].background;
 
   return (
@@ -17,12 +16,12 @@ export default function Profile() {
             source={{ uri: "https://i.pravatar.cc/200" }}
             style={{ width: 120, height: 120, borderRadius: 60 }}
           />
-          <ThemedText
-            style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}
-          >
+
+          <ThemedText style={{ fontSize: 32, fontWeight: "bold" }}>
             Your Profile
           </ThemedText>
-          <ThemedText style={{ color: "rgba(255,255,255,0.8)" }}>
+
+          <ThemedText>
             View your info and preferences
           </ThemedText>
         </View>
@@ -35,7 +34,7 @@ export default function Profile() {
               borderRadius: 14,
             }}
           >
-            <ThemedText style={{ fontSize: 18, color: "#fff" }}>
+            <ThemedText style={{ fontSize: 18 }}>
               Edit Profile
             </ThemedText>
           </TouchableOpacity>
@@ -47,7 +46,7 @@ export default function Profile() {
               borderRadius: 14,
             }}
           >
-            <ThemedText style={{ fontSize: 18, color: "#fff" }}>
+            <ThemedText style={{ fontSize: 18 }}>
               Change Password
             </ThemedText>
           </TouchableOpacity>
@@ -59,7 +58,7 @@ export default function Profile() {
               borderRadius: 14,
             }}
           >
-            <ThemedText style={{ fontSize: 18, color: "#fff" }}>
+            <ThemedText style={{ fontSize: 18 }}>
               Logout
             </ThemedText>
           </TouchableOpacity>

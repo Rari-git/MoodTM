@@ -32,13 +32,11 @@ export default function WidgetCard({ title, subtitle, onPress }: Props) {
           borderRadius: 16,
         }}
       >
-        <ThemedText
-          style={{ fontSize: 18, fontWeight: "600", color: "#fff" }}
-        >
+        <ThemedText style={{ fontSize: 18, fontWeight: "600" }}>
           {title}
         </ThemedText>
 
-        <ThemedText style={{ color: "#fff", marginTop: 4 }}>
+        <ThemedText style={{ marginTop: 4 }}>
           {subtitle}
         </ThemedText>
       </LinearGradient>
