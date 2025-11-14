@@ -9,10 +9,4 @@ module.exports = defineConfig([
   },
 ]);
 
-plugins: [
-  ['module:react-native-dotenv', {
-    moduleName: '@env',
-    path: '.env',
-  }],
-]
 
