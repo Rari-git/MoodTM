@@ -1,16 +1,12 @@
 import { View } from "react-native";
 import ThemedText from "./ThemedText";
 
-type Props = {
-  text: string;
-};
-
-export default function SectionTitle({ text }: Props) {
+export default function SectionTitle({ text }: { text: string }) {
   return (
-    <View style={{ marginBottom: 12 }}>
-<ThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
-  {text}
-</ThemedText>
+    <View style={{ marginBottom: 16 }}>
+      <ThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+        {text}
+      </ThemedText>
     </View>
   );
 }

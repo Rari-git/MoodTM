@@ -1,16 +1,21 @@
-import axios, {
-    AxiosError,
-    AxiosInstance,
-    InternalAxiosRequestConfig
-} from 'axios';
 
-// Domain models
-export interface Login {
+import { API_URL } from "@env";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+} from "axios";
+import * as SecureStore from "expo-secure-store";
+
+// --------------------------
+// Domain Models
+// --------------------------
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-export interface Register {
+export interface RegisterPayload {
   email: string;
   password: string;
 }
@@ -19,7 +24,6 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  // add other fields returned by your API user object as needed
 }
 
 export interface AuthResponse {
@@ -27,33 +31,49 @@ export interface AuthResponse {
   user: User;
 }
 
-// Axios instance
+// Extend Axios config
 export interface CustomAxiosConfig extends InternalAxiosRequestConfig {
-  silent?: boolean; // example: skip global error toast
+  silent?: boolean; // skip global 401 handling
 }
 
+// --------------------------
+// Axios Instance
+// --------------------------
 export const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL as string,
+  baseURL: API_URL,
   timeout: 10_000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
 });
 
-// Request interceptor
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+// --------------------------
+// Request Interceptor
+// --------------------------
+api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  const token = await SecureStore.getItemAsync("token");
+
   if (token) {
-    (config as CustomAxiosConfig).headers.Authorization = `Bearer ${token}`;
+    config.headers.set("Authorization", `Bearer ${token}`);
   }
+
   return config as CustomAxiosConfig;
 });
 
+// --------------------------
+// Response Interceptor
+// --------------------------
 api.interceptors.response.use(
-  (res) => res,
-  (err: AxiosError<{ message?: string }>) => {
-    const cfg = err.config as CustomAxiosConfig | undefined;
-    if (!cfg?.silent && err.response?.status === 401) {
-      // redirect to login, refresh token, …
+  (response) => response,
+  async (error: AxiosError<{ message?: string }>) => {
+    const cfg = error.config as CustomAxiosConfig | undefined;
+
+    if (error.response?.status === 401 && !cfg?.silent) {
+      console.log("401 unauthorized — redirect to login?");
+      // TODO: SecureStore.deleteItemAsync("token");
+      // TODO: navigation.reset('/login');
     }
-    return Promise.reject(err);
+
+    return Promise.reject(error);
   }
 );
+
+

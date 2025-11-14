@@ -1,6 +1,13 @@
 import React, { createContext, useContext } from "react";
 
-const ThemeContext = createContext({
+type ThemeType = {
+  fonts: {
+    regular: string;
+    bold: string;
+  };
+};
+
+const ThemeContext = createContext<ThemeType>({
   fonts: {
     regular: "Poppins-Regular",
     bold: "Poppins-Bold",

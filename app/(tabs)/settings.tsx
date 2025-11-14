@@ -7,17 +7,15 @@ import { useMood } from "../../store/useMood";
 
 export default function Settings() {
   const mood = useMood((state) => state.mood);
-  const bgColors = moodColors[mood].background; 
+  const bgColors = moodColors[mood].background;
 
   const [notifications, setNotifications] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
 
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 24, gap: 32 }}>
-        <ThemedText
-          style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}
-        >
+      <View style={{ flex: 1, padding: 24 }}>
+        <ThemedText style={{ fontSize: 32, fontWeight: "bold", marginBottom: 24 }}>
           Settings
         </ThemedText>
 
@@ -28,7 +26,7 @@ export default function Settings() {
             alignItems: "center",
           }}
         >
-          <ThemedText style={{ fontSize: 18, color: "#fff" }}>
+          <ThemedText style={{ fontSize: 18 }}>
             Notifications
           </ThemedText>
           <Switch value={notifications} onValueChange={setNotifications} />
@@ -41,19 +39,19 @@ export default function Settings() {
             alignItems: "center",
           }}
         >
-          <ThemedText style={{ fontSize: 18, color: "#fff" }}>
+          <ThemedText style={{ fontSize: 18 }}>
             Dark Mode
           </ThemedText>
           <Switch value={darkMode} onValueChange={setDarkMode} />
         </View>
 
-        <View>
-          <ThemedText
-            style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}
-          >
+        <View style={{ marginTop: 16 }}>
+          <ThemedText style={{ fontSize: 18, fontWeight: "bold" }}>
             Language
           </ThemedText>
-          <ThemedText style={{ color: "#fff" }}>English (default)</ThemedText>
+          <ThemedText>
+            English (default)
+          </ThemedText>
         </View>
       </View>
     </LinearGradient>

@@ -1,46 +1,57 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { moodColors } from "../constants/moodColors";
 import { useMood } from "../store/useMood";
 import ThemedText from "./ThemedText";
 
-type Props = {
+type WidgetCardProps = {
   title: string;
   subtitle: string;
+  icon: string;
   onPress?: () => void;
 };
 
-export default function WidgetCard({ title, subtitle, onPress }: Props) {
-  const mood = useMood((state) => state.mood);
-
-  const colors =
-    mood && moodColors[mood]
-      ? moodColors[mood].card
-      : (["#FFE29F", "#FF719A"] as const);
+export default function WidgetCard({ title, subtitle, icon, onPress }: WidgetCardProps) {
+  const mood = useMood((s) => s.mood);
+  const colors = moodColors[mood].card;
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={{ borderRadius: 16, overflow: "hidden" }}
+      style={{
+        borderRadius: 20,
+        overflow: "hidden",
+      }}
     >
       <LinearGradient
         colors={colors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         style={{
-          padding: 16,
-          borderRadius: 16,
+          padding: 18,
+          borderRadius: 20,
+          flexDirection: "row",
+          gap: 16,
+          alignItems: "center",
         }}
       >
-        <ThemedText
-          style={{ fontSize: 18, fontWeight: "600", color: "#fff" }}
+        <View
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 12,
+            backgroundColor: "rgba(255,255,255,0.3)",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {title}
-        </ThemedText>
+          <ThemedText style={{ fontSize: 24 }}>{icon}</ThemedText>
+        </View>
 
-        <ThemedText style={{ color: "#fff", marginTop: 4 }}>
-          {subtitle}
-        </ThemedText>
+        <View style={{ flex: 1 }}>
+          <ThemedText style={{ fontSize: 18, fontWeight: "bold" }}>
+            {title}
+          </ThemedText>
+          <ThemedText>{subtitle}</ThemedText>
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
