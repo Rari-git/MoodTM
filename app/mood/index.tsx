@@ -18,35 +18,36 @@ export default function MoodPicker() {
         flex: 1,
         padding: 20,
         justifyContent: "center",
-        gap: 20,
         backgroundColor: "#fff",
       }}
     >
-      <ThemedText style={{ fontSize: 28, fontWeight: "700" }}>Select your mood</ThemedText>
+      <ThemedText style={{ fontSize: 28, fontWeight: "700", marginBottom: 20 }}>
+        Select your mood
+      </ThemedText>
 
       <TouchableOpacity
-        style={{ padding: 16, backgroundColor: "#FFE29F", borderRadius: 16 }}
+        style={{ padding: 16, backgroundColor: "#FFE29F", borderRadius: 16, marginBottom: 12 }}
         onPress={() => handleSelect("happy")}
       >
         <ThemedText style={{ fontSize: 18 }}>😄 Happy</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{ padding: 16, backgroundColor: "#A7C5EB", borderRadius: 16 }}
+        style={{ padding: 16, backgroundColor: "#A7C5EB", borderRadius: 16, marginBottom: 12 }}
         onPress={() => handleSelect("sad")}
       >
         <ThemedText style={{ fontSize: 18 }}>😢 Sad</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{ padding: 16, backgroundColor: "#8EC5FC", borderRadius: 16 }}
+        style={{ padding: 16, backgroundColor: "#8EC5FC", borderRadius: 16, marginBottom: 12 }}
         onPress={() => handleSelect("relaxed")}
       >
         <ThemedText style={{ fontSize: 18 }}>😌 Relaxed</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{ padding: 16, backgroundColor: "#FFB75E", borderRadius: 16 }}
+        style={{ padding: 16, backgroundColor: "#FFB75E", borderRadius: 16, marginBottom: 12 }}
         onPress={() => handleSelect("energetic")}
       >
         <ThemedText style={{ fontSize: 18 }}>⚡ Energetic</ThemedText>
