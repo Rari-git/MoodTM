@@ -5,21 +5,26 @@ import axios, {
 } from 'axios';
 
 // Domain models
-export interface User {
-  id: number;
-  name: string;
+export interface Login {
   email: string;
+  password: string;
 }
 
-export interface PageMeta {
-  page: number;
-  perPage: number;
-  total: number;
+export interface Register {
+  email: string;
+  password: string;
 }
 
-export interface UsersResponse {
-  data: User[];
-  meta: PageMeta;
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  // add other fields returned by your API user object as needed
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
 }
 
 // Axios instance

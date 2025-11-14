@@ -14,8 +14,9 @@
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
-    "@react-navigation/native": "^7.1.19",
-    "@react-navigation/native-stack": "^7.6.2",
+    "@react-navigation/native": "^7.1.8",
+    "@react-navigation/native-stack": "^7.3.16",
+    "@types/jest": "29.5.14",
     "axios": "^1.13.2",
     "expo": "~54.0.23",
     "expo-constants": "~18.0.10",
@@ -24,7 +25,7 @@
     "expo-image": "~3.0.10",
     "expo-linear-gradient": "~15.0.7",
     "expo-linking": "~8.0.8",
-    "expo-module-scripts": "^5.0.7",
+    "expo-module-scripts": "^3.0.5",
     "expo-router": "~6.0.14",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
@@ -33,7 +34,7 @@
     "expo-web-browser": "~15.0.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-native": "^0.81.5",
+    "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-maps": "1.20.1",
     "react-native-reanimated": "~4.1.1",
@@ -45,14 +46,14 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@types/eslint-scope": "^8.3.2",
     "@types/node": "^24.10.1",
     "@types/react": "~19.1.0",
     "@types/react-native": "^0.72.8",
     "@types/react-native-vector-icons": "^6.4.18",
-    "eslint": "^9.25.0",
+    "eslint": "^8.57.1",
     "eslint-config-expo": "~10.0.0",
-    "typescript": "~5.9.2",
-    "vite": "^7.2.2"
+    "typescript": "~5.9.2"
   },
   "private": true
 }
