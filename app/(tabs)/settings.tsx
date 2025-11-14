@@ -7,12 +7,7 @@ import { useMood } from "../../store/useMood";
 
 export default function Settings() {
   const mood = useMood((state) => state.mood);
-
-  const bgColors = (
-    mood && moodColors[mood] && moodColors[mood].background
-      ? moodColors[mood].background
-      : (["#8EC5FC", "#E0C3FC"] as const)
-  ) as readonly [string, string, ...string[]];
+  const bgColors = moodColors[mood].background; // ✅ tuple corect
 
   const [notifications, setNotifications] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
@@ -20,11 +15,12 @@ export default function Settings() {
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 24, gap: 32 }}>
-        <ThemedText style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}>
+        <ThemedText
+          style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}
+        >
           Settings
         </ThemedText>
 
-        {/* Notifications toggle */}
         <View
           style={{
             flexDirection: "row",
@@ -38,7 +34,6 @@ export default function Settings() {
           <Switch value={notifications} onValueChange={setNotifications} />
         </View>
 
-        {/* Dark mode */}
         <View
           style={{
             flexDirection: "row",
@@ -52,7 +47,6 @@ export default function Settings() {
           <Switch value={darkMode} onValueChange={setDarkMode} />
         </View>
 
-        {/* Language */}
         <View>
           <ThemedText
             style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}

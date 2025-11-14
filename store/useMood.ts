@@ -1,13 +1,12 @@
 import { create } from "zustand";
+import type { Mood } from "../constants/moodColors";
 
-type MoodType = "happy" | "sad" | "relaxed" | "energetic" | "angry" | null;
+type MoodState = {
+  mood: Mood;
+  setMood: (mood: Mood) => void;
+};
 
-interface MoodStore {
-  mood: MoodType;
-  setMood: (mood: MoodType) => void;
-}
-
-export const useMood = create<MoodStore>((set) => ({
-  mood: null,
+export const useMood = create<MoodState>((set) => ({
+  mood: "happy", // 👈 default
   setMood: (mood) => set({ mood }),
 }));

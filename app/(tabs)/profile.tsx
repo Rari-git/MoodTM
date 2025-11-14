@@ -7,24 +7,19 @@ import { useMood } from "../../store/useMood";
 export default function Profile() {
   const mood = useMood((state) => state.mood);
 
-  const bgColors = (mood && moodColors[mood]
-    ? (moodColors[mood].background as readonly [string, string, ...string[]])
-    : (["#8EC5FC", "#E0C3FC"] as const as readonly [string, string, ...string[]]));
+  const bgColors = moodColors[mood].background; // ✅ tuple corect
 
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 24, gap: 24 }}>
-        {/* Profile Header */}
         <View style={{ alignItems: "center", gap: 12, marginTop: 20 }}>
           <Image
             source={{ uri: "https://i.pravatar.cc/200" }}
-            style={{
-              width: 120,
-              height: 120,
-              borderRadius: 60,
-            }}
+            style={{ width: 120, height: 120, borderRadius: 60 }}
           />
-          <ThemedText style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}>
+          <ThemedText
+            style={{ fontSize: 32, fontWeight: "bold", color: "#fff" }}
+          >
             Your Profile
           </ThemedText>
           <ThemedText style={{ color: "rgba(255,255,255,0.8)" }}>
@@ -32,7 +27,6 @@ export default function Profile() {
           </ThemedText>
         </View>
 
-        {/* Buttons */}
         <View style={{ gap: 16 }}>
           <TouchableOpacity
             style={{
