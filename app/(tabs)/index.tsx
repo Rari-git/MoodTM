@@ -1,7 +1,7 @@
 import { ScrollView, View } from "react-native";
-import HomeHeader from "../components/HomeHeader";
-import SectionTitle from "../components/SectionTitle";
-import WidgetCard from "../components/WidgetCard";
+import HomeHeader from "../../components/HomeHeader";
+import SectionTitle from "../../components/SectionTitle";
+import WidgetCard from "../../components/WidgetCard";
 
 export default function Home() {
   return (
