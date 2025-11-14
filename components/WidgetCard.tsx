@@ -1,4 +1,7 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { Text, TouchableOpacity } from "react-native";
+import { moodColors } from "../constants/moodColors";
+import { useMood } from "../store/useMood";
 
 type Props = {
   title: string;
@@ -6,20 +9,28 @@ type Props = {
 };
 
 export default function WidgetCard({ title, subtitle }: Props) {
+  const mood = useMood((state) => state.mood);
+
+  const colors =
+  mood && moodColors[mood]
+    ? moodColors[mood].card
+    : ["#FFE29F", "#FF719A"] as const;
+
   return (
-    <TouchableOpacity
-      style={{
-        backgroundColor: "#f2f2f2",
-        padding: 16,
-        borderRadius: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      }}
-    >
-      <Text style={{ fontSize: 18, fontWeight: "600" }}>{title}</Text>
-      <Text style={{ color: "#555", marginTop: 4 }}>{subtitle}</Text>
+    <TouchableOpacity style={{ borderRadius: 16, overflow: "hidden" }}>
+      <LinearGradient
+        colors={colors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ padding: 16, borderRadius: 16 }}
+      >
+        <Text style={{ fontSize: 18, fontWeight: "600", color: "#fff" }}>
+          {title}
+        </Text>
+        <Text style={{ color: "#fff", marginTop: 4 }}>
+          {subtitle}
+        </Text>
+      </LinearGradient>
     </TouchableOpacity>
   );
 }
