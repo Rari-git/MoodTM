@@ -13,6 +13,12 @@ import {
   View,
 } from "react-native";
 
+type StoredUser = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export default function Login() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
@@ -38,16 +44,14 @@ export default function Login() {
     ]).start();
   }, []);
 
-  // FORM STATE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
-  // FOCUS STATE
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPassFocused, setIsPassFocused] = useState(false);
 
-  // BUTTON ANIMATION
   const tapAnim = useRef(new Animated.Value(1)).current;
   const animateButton = () => {
     Animated.sequence([
@@ -56,13 +60,26 @@ export default function Login() {
     ]).start();
   };
 
-  // HANDLE LOGIN
   const handleConnect = async () => {
-    // Aici vei face login real când ai backend.
-    if (email.length > 2 && password.length > 2) {
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      router.replace("/(tabs)");
+    setLoginError("");
+
+    if (!email || !password) {
+      setLoginError("Complete email and password!");
+      return;
     }
+
+    const stored = await AsyncStorage.getItem("users");
+    const users: StoredUser[] = stored ? JSON.parse(stored) : [];
+
+    const existing = users.find((u: StoredUser) => u.email === email);
+
+    if (!existing || existing.password !== password) {
+      setLoginError("Email sau parolă greșite.");
+      return;
+    }
+
+    await AsyncStorage.setItem("isLoggedIn", "true");
+    router.replace("/(tabs)");
   };
 
   return (
@@ -72,7 +89,6 @@ export default function Login() {
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
         
-        {/* LOGO + TITLE */}
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -90,7 +106,6 @@ export default function Login() {
           <Text style={{ color: "#fff", fontSize: 26, fontWeight: "600" }}>MoodTM</Text>
         </View>
 
-        {/* CARD */}
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Animated.View
             style={{
@@ -118,7 +133,6 @@ export default function Login() {
               Welcome back 👋
             </Text>
 
-            {/* EMAIL */}
             <View
               style={{
                 borderWidth: 2,
@@ -148,7 +162,6 @@ export default function Login() {
               />
             </View>
 
-            {/* PASSWORD */}
             <View
               style={{
                 flexDirection: "row",
@@ -183,7 +196,6 @@ export default function Login() {
               </TouchableOpacity>
             </View>
 
-            {/* LOGIN BUTTON */}
             <Animated.View style={{ transform: [{ scale: tapAnim }] }}>
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -210,10 +222,25 @@ export default function Login() {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* REGISTER LINK */}
+            {loginError.length > 0 && (
+              <Text
+                style={{
+                  color: "red",
+                  marginTop: 10,
+                  textAlign: "center",
+                  fontSize: 14,
+                }}
+              >
+                {loginError}
+              </Text>
+            )}
+
             <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18 }}>
               <Text style={{ fontSize: 14, color: "#777" }}>Don’t have an account? </Text>
-              <Link href="/(auth)/register" style={{ fontSize: 14, color: "#4c84ff", fontWeight: "600" }}>
+              <Link
+                href="/(auth)/register"
+                style={{ fontSize: 14, color: "#4c84ff", fontWeight: "600" }}
+              >
                 Create one
               </Link>
             </View>

@@ -1,4 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { Image, TouchableOpacity, View } from "react-native";
 import ThemedText from "../../components/ThemedText";
 import { moodColors } from "../../constants/moodColors";
@@ -8,9 +10,16 @@ export default function Profile() {
   const mood = useMood((state) => state.mood);
   const bgColors = moodColors[mood].background;
 
+  // 🔥 Logout logic
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("isLoggedIn");
+    router.replace("/(auth)/login");
+  };
+
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 24, gap: 24 }}>
+        
         <View style={{ alignItems: "center", gap: 12, marginTop: 20 }}>
           <Image
             source={{ uri: "https://i.pravatar.cc/200" }}
@@ -51,7 +60,9 @@ export default function Profile() {
             </ThemedText>
           </TouchableOpacity>
 
+          {/* 🔥 REAL LOGOUT BUTTON */}
           <TouchableOpacity
+            onPress={handleLogout}
             style={{
               backgroundColor: "rgba(255,255,255,0.2)",
               padding: 16,
@@ -63,6 +74,7 @@ export default function Profile() {
             </ThemedText>
           </TouchableOpacity>
         </View>
+
       </View>
     </LinearGradient>
   );

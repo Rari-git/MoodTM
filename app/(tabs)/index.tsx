@@ -28,7 +28,7 @@ export default function Home() {
           />
 
           <WidgetCard
-            title="What should I do today?"
+            title="Wha should I do today?"
             subtitle="Find activities based on your mood"
           />
 

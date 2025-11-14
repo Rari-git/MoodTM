@@ -4,14 +4,20 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-    Animated,
-    KeyboardAvoidingView,
-    Platform,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+
+type StoredUser = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export default function Register() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -42,19 +48,49 @@ export default function Register() {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
 
   const [fName, setFName] = useState(false);
   const [fEmail, setFEmail] = useState(false);
   const [fPass, setFPass] = useState(false);
   const [fConf, setFConf] = useState(false);
 
-  // CREATE ACCOUNT (temporar fără backend)
   const handleRegister = async () => {
-    if (name.length < 2 || email.length < 4 || pass.length < 3) return;
-    if (passwordError) return;
+    setGeneralError("");
 
-    await AsyncStorage.setItem("isLoggedIn", "true");
-    router.replace("/(tabs)");
+    if (!name || !email || !pass || !confirmPass) {
+      setGeneralError("Te rog completează toate câmpurile.");
+      return;
+    }
+
+    if (passwordError) {
+      setGeneralError("Parolele nu sunt la fel.");
+      return;
+    }
+
+    const stored = await AsyncStorage.getItem("users");
+    const users: StoredUser[] = stored ? JSON.parse(stored) : [];
+
+    const existing = users.find((u: StoredUser) => u.email === email);
+
+    if (existing) {
+      setGeneralError("Acest email este deja înregistrat.");
+      return;
+    }
+
+    const newUser: StoredUser = {
+      name,
+      email,
+      password: pass,
+    };
+
+    users.push(newUser);
+
+    await AsyncStorage.setItem("users", JSON.stringify(users));
+
+    // NU îl logăm automat, îl trimitem la login
+    await AsyncStorage.removeItem("isLoggedIn");
+    router.replace("/(auth)/login");
   };
 
   return (
@@ -64,7 +100,6 @@ export default function Register() {
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
         
-        {/* ICON + TITLE */}
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -84,7 +119,6 @@ export default function Register() {
           </Text>
         </View>
 
-        {/* CARD */}
         <Animated.View
           style={{
             opacity: fadeAnim,
@@ -204,7 +238,7 @@ export default function Register() {
             </TouchableOpacity>
           </View>
 
-          {/* CONFIRM PASSWORD */}
+          {/* CONFIRM PASS */}
           <View
             style={{
               borderWidth: 2,
@@ -250,14 +284,25 @@ export default function Register() {
             </TouchableOpacity>
           </View>
 
-          {/* ERROR TEXT */}
           {passwordError.length > 0 && (
-            <Text style={{ color: "red", marginTop: 8, marginBottom: 10, fontSize: 14 }}>
+            <Text style={{ color: "red", marginTop: 8, fontSize: 14 }}>
               {passwordError}
             </Text>
           )}
 
-          {/* REGISTER BUTTON */}
+          {generalError.length > 0 && (
+            <Text
+              style={{
+                color: "red",
+                marginTop: 4,
+                marginBottom: 8,
+                fontSize: 14,
+              }}
+            >
+              {generalError}
+            </Text>
+          )}
+
           <TouchableOpacity
             onPress={handleRegister}
             style={{
@@ -279,7 +324,6 @@ export default function Register() {
             </Text>
           </TouchableOpacity>
 
-          {/* BACK TO LOGIN */}
           <View
             style={{
               flexDirection: "row",
