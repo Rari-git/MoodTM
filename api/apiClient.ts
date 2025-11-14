@@ -1,11 +1,14 @@
-import axios, {
-    AxiosError,
-    AxiosInstance,
-    InternalAxiosRequestConfig
-} from 'axios';
+
+import { API_URL } from "@env";
+
+export const api = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+  headers: { "Content-Type": "application/json" },
+});
 
 // Domain models
-export interface Login {
+/*export interface Login {
   email: string;
   password: string;
 }
@@ -56,4 +59,4 @@ api.interceptors.response.use(
     }
     return Promise.reject(err);
   }
-);
+);*/

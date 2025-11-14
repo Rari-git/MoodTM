@@ -8,3 +8,11 @@ module.exports = defineConfig([
     ignores: ['dist/*'],
   },
 ]);
+
+plugins: [
+  ['module:react-native-dotenv', {
+    moduleName: '@env',
+    path: '.env',
+  }],
+]
+
