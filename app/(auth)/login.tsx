@@ -20,6 +20,7 @@ type StoredUser = {
 };
 
 export default function Login() {
+  // ANIMATIONS
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -44,16 +45,18 @@ export default function Login() {
     ]).start();
   }, []);
 
+  // FORM STATE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loginError, setLoginError] = useState("");
 
+  // FOCUS STATE
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPassFocused, setIsPassFocused] = useState(false);
 
+  // BUTTON ANIMATION
   const tapAnim = useRef(new Animated.Value(1)).current;
-
   const animateButton = () => {
     Animated.sequence([
       Animated.timing(tapAnim, { toValue: 0.95, duration: 80, useNativeDriver: true }),
@@ -61,18 +64,13 @@ export default function Login() {
     ]).start();
   };
 
+  // LOGIN LOGIC
   const handleConnect = async () => {
-<<<<<<< HEAD
     setLoginError("");
 
     if (!email || !password) {
       setLoginError("Complete email and password!");
       return;
-=======
-    if (email.length > 2 && password.length > 2) {
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      router.replace("/(tabs)");
->>>>>>> 9b2a9bee0838d2ab5e68e5517a99e15cc6ef4ce8
     }
 
     const stored = await AsyncStorage.getItem("users");
@@ -89,7 +87,7 @@ export default function Login() {
     router.replace("/(tabs)");
   };
 
-  // style comun pentru a elimina toate chenarele din interior
+  // style folosit pentru interiorul inputurilor
   const inputInnerStyle = {
     flex: 1,
     fontSize: 16,
@@ -106,11 +104,8 @@ export default function Login() {
       style={{ flex: 1 }}
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
-        
-<<<<<<< HEAD
-=======
+
         {/* LOGO */}
->>>>>>> 9b2a9bee0838d2ab5e68e5517a99e15cc6ef4ce8
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -155,6 +150,7 @@ export default function Login() {
               Welcome back 👋
             </Text>
 
+            {/* EMAIL */}
             <View
               style={{
                 borderWidth: 2,
@@ -180,6 +176,7 @@ export default function Login() {
               />
             </View>
 
+            {/* PASSWORD */}
             <View
               style={{
                 flexDirection: "row",
@@ -209,6 +206,7 @@ export default function Login() {
               </TouchableOpacity>
             </View>
 
+            {/* BUTTON */}
             <Animated.View style={{ transform: [{ scale: tapAnim }] }}>
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -235,6 +233,7 @@ export default function Login() {
               </TouchableOpacity>
             </Animated.View>
 
+            {/* ERROR */}
             {loginError.length > 0 && (
               <Text
                 style={{
@@ -248,6 +247,7 @@ export default function Login() {
               </Text>
             )}
 
+            {/* REGISTER LINK */}
             <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18 }}>
               <Text style={{ fontSize: 14, color: "#777" }}>Don’t have an account? </Text>
               <Link
