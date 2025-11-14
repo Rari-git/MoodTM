@@ -3,7 +3,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { AppState, Platform, View } from "react-native";
+import { Platform, View } from "react-native";
 import { ThemeProvider } from "../theme/ThemeContext";
 
 export default function RootLayout() {
@@ -12,36 +12,22 @@ export default function RootLayout() {
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
   });
 
-  // 👇👇👇 AICI ESTE USEEFFECT 👇👇👇
   useEffect(() => {
     if (Platform.OS === "android") {
-      const applyImmersive = () => {
-        NavigationBar.setBehaviorAsync("inset-swipe");
-        NavigationBar.setVisibilityAsync("hidden");
-      };
+      // 👉 ascunde bara de jos (gestures only)
+      NavigationBar.setVisibilityAsync("hidden");
 
-      // prima aplicație
-      applyImmersive();
-
-      // reaplicare după ALT+TAB
-      const subscription = AppState.addEventListener("change", (state) => {
-        if (state === "active") {
-          applyImmersive();
-        }
-      });
-
-      return () => subscription.remove();
+      // 👉 activează immersive sticky (glisezi în sus ca să apară)
+      NavigationBar.setBehaviorAsync("overlay-swipe");
     }
   }, []);
-  // 👆👆👆 AICI SE TERMINĂ USEEFFECT 👆👆👆
-
 
   if (!loaded) return null;
 
   return (
     <ThemeProvider>
       <View style={{ flex: 1 }}>
-        <StatusBar translucent style="light" />
+        <StatusBar hidden />
         <Stack screenOptions={{ headerShown: false }} />
       </View>
     </ThemeProvider>
