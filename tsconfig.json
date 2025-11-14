@@ -8,10 +8,12 @@
       ]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "components/HomeHeader.tsx"  ]
+"include": [
+  "**/*.ts",
+  "**/*.tsx",
+  ".expo/types/**/*.ts",
+  "expo-env.d.ts",
+  "components/HomeHeader.tsx",
+],
+"types": ["vite/client"]
 }
