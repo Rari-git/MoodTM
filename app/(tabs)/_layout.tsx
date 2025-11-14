@@ -1,32 +1,54 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Tabs } from "expo-router";
+import { moodColors } from "../../constants/moodColors";
+import { useMood } from "../../store/useMood";
 
 export default function TabsLayout() {
+  const mood = useMood((state) => state.mood);
+
+  const colors =
+    mood && moodColors[mood]
+      ? moodColors[mood].background
+      : ["#8EC5FC", "#E0C3FC"];
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
 
-        // CULORI PERSONALIZATE
-        tabBarActiveTintColor: "#ff4cc3ff",
-        tabBarInactiveTintColor: "#a0a0a0",
+        tabBarActiveTintColor: "#000000ff",
+        tabBarInactiveTintColor: "#ffffffff",
 
-        // STIL TAB BAR
         tabBarStyle: {
-          backgroundColor: "#fff",
+          backgroundColor: "transparent",
+          borderTopWidth: 0,
           height: 70,
-          borderTopWidth: 0, //elimina partea de sus a barii
-          paddingBottom: 12,
-          paddingTop: 10,
+          position: "absolute",
+          elevation: 0,
         },
+
+        // Gradient background for the tab bar
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={colors as any}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ flex: 1 }}
+          />
+        ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -35,8 +57,12 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle-outline" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "person-circle" : "person-circle-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -45,8 +71,12 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "settings" : "settings-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
