@@ -55,11 +55,13 @@
     "@types/eslint-scope": "^8.3.2",
     "@types/node": "^24.10.1",
     "@types/react": "~19.1.0",
-    "@types/react-native": "^0.72.8",
     "@types/react-native-vector-icons": "^6.4.18",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~10.0.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  }
 }

@@ -14,8 +14,8 @@ export default function Settings() {
 
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 24, gap: 32 }}>
-        <ThemedText style={{ fontSize: 32, fontWeight: "bold" }}>
+      <View style={{ flex: 1, padding: 24 }}>
+        <ThemedText style={{ fontSize: 32, fontWeight: "bold", marginBottom: 24 }}>
           Settings
         </ThemedText>
 
@@ -45,7 +45,7 @@ export default function Settings() {
           <Switch value={darkMode} onValueChange={setDarkMode} />
         </View>
 
-        <View>
+        <View style={{ marginTop: 16 }}>
           <ThemedText style={{ fontSize: 18, fontWeight: "bold" }}>
             Language
           </ThemedText>

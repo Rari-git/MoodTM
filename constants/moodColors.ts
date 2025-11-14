@@ -2,7 +2,7 @@ export const moodColors = {
   happy: {
     background: ["#FFE259", "#FFA751"] as const,
     card: ["#FFEE88", "#FFBB66"] as const,
-    text: "#000000ff",
+    text: "#000000",
   },
   sad: {
     background: ["#74ABE2", "#5563DE"] as const,
@@ -12,7 +12,7 @@ export const moodColors = {
   relaxed: {
     background: ["#8EC5FC", "#E0C3FC"] as const,
     card: ["#C9E9FF", "#B8C6FF"] as const,
-    text: "#000000ff",
+    text: "#000000",
   },
   energetic: {
     background: ["#f6d365", "#fda085"] as const,
@@ -22,7 +22,7 @@ export const moodColors = {
   angry: {
     background: ["#CB356B", "#BD3F32"] as const,
     card: ["#FF6F6F", "#D95D39"] as const,
-    text: "#ffffffff",
+    text: "#ffffff",
   },
 } as const;
 

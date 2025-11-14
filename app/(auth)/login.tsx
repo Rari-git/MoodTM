@@ -53,6 +53,7 @@ export default function Login() {
   const [isPassFocused, setIsPassFocused] = useState(false);
 
   const tapAnim = useRef(new Animated.Value(1)).current;
+
   const animateButton = () => {
     Animated.sequence([
       Animated.timing(tapAnim, { toValue: 0.95, duration: 80, useNativeDriver: true }),
@@ -61,11 +62,17 @@ export default function Login() {
   };
 
   const handleConnect = async () => {
+<<<<<<< HEAD
     setLoginError("");
 
     if (!email || !password) {
       setLoginError("Complete email and password!");
       return;
+=======
+    if (email.length > 2 && password.length > 2) {
+      await AsyncStorage.setItem("isLoggedIn", "true");
+      router.replace("/(tabs)");
+>>>>>>> 9b2a9bee0838d2ab5e68e5517a99e15cc6ef4ce8
     }
 
     const stored = await AsyncStorage.getItem("users");
@@ -82,6 +89,17 @@ export default function Login() {
     router.replace("/(tabs)");
   };
 
+  // style comun pentru a elimina toate chenarele din interior
+  const inputInnerStyle = {
+    flex: 1,
+    fontSize: 16,
+    borderWidth: 0,
+    outlineWidth: 0,
+    paddingVertical: 0,
+    shadowColor: "transparent",
+    shadowOpacity: 0,
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -89,6 +107,10 @@ export default function Login() {
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
         
+<<<<<<< HEAD
+=======
+        {/* LOGO */}
+>>>>>>> 9b2a9bee0838d2ab5e68e5517a99e15cc6ef4ce8
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -154,11 +176,7 @@ export default function Login() {
                 onBlur={() => setIsEmailFocused(false)}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                style={{
-                  fontSize: 16,
-                  borderWidth: 0,
-                  outlineWidth: 0,
-                }}
+                style={inputInnerStyle}
               />
             </View>
 
@@ -183,12 +201,7 @@ export default function Login() {
                 onChangeText={setPassword}
                 onFocus={() => setIsPassFocused(true)}
                 onBlur={() => setIsPassFocused(false)}
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  borderWidth: 0,
-                  outlineWidth: 0,
-                }}
+                style={inputInnerStyle}
               />
 
               <TouchableOpacity onPress={() => setShowPass(!showPass)}>

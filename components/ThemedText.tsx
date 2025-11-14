@@ -1,24 +1,45 @@
-import { Text, TextProps } from "react-native";
+import { Text, TextProps, TextStyle } from "react-native";
 import { moodColors } from "../constants/moodColors";
 import { useMood } from "../store/useMood";
-import { useTheme } from "../theme/ThemeContext";
 
-export default function ThemedText(props: TextProps) {
-  const { fonts } = useTheme();
-  const mood = useMood((state) => state.mood);
+export default function ThemedText({ style, ...rest }: TextProps) {
+  const mood = useMood((s) => s.mood);
+  const textColor = moodColors[mood].text;
 
-  const currentColor =
-    mood && moodColors[mood] ? moodColors[mood].text : "#000";
+  // facem style întotdeauna array, ca să putem căuta fontWeight
+  const styleArray: TextStyle[] = [];
+  if (Array.isArray(style)) {
+    styleArray.push(...(style as TextStyle[]));
+  } else if (style) {
+    styleArray.push(style as TextStyle);
+  }
+
+  let fontWeight: TextStyle["fontWeight"] | undefined;
+  for (const s of styleArray) {
+    if (!s) continue;
+    if (s.fontWeight) {
+      fontWeight = s.fontWeight;
+    }
+  }
+
+  const numericWeight =
+    typeof fontWeight === "string" && /^\d+$/.test(fontWeight)
+      ? Number(fontWeight)
+      : fontWeight;
+
+  const isBold =
+    fontWeight === "bold" ||
+    (typeof numericWeight === "number" && numericWeight >= 600);
 
   return (
     <Text
-      {...props}
+      {...rest}
       style={[
-        { 
-          fontFamily: fonts.regular,
-          color: currentColor, // 👉 automat după mood
+        {
+          color: textColor,
+          fontFamily: isBold ? "Poppins-Bold" : "Poppins-Regular",
         },
-        props.style,
+        style,
       ]}
     />
   );
