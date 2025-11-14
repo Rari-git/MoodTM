@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import ThemedText from "../../components/ThemedText";
 import { useMood } from "../../store/useMood";
 
 export default function MoodPicker() {
@@ -21,41 +22,41 @@ export default function MoodPicker() {
         backgroundColor: "#fff",
       }}
     >
-      <Text style={{ fontSize: 28, fontWeight: "700" }}>Select your mood</Text>
+      <ThemedText style={{ fontSize: 28, fontWeight: "700" }}>Select your mood</ThemedText>
 
       <TouchableOpacity
         style={{ padding: 16, backgroundColor: "#FFE29F", borderRadius: 16 }}
         onPress={() => handleSelect("happy")}
       >
-        <Text style={{ fontSize: 18 }}>😄 Happy</Text>
+        <ThemedText style={{ fontSize: 18 }}>😄 Happy</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={{ padding: 16, backgroundColor: "#A7C5EB", borderRadius: 16 }}
         onPress={() => handleSelect("sad")}
       >
-        <Text style={{ fontSize: 18 }}>😢 Sad</Text>
+        <ThemedText style={{ fontSize: 18 }}>😢 Sad</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={{ padding: 16, backgroundColor: "#8EC5FC", borderRadius: 16 }}
         onPress={() => handleSelect("relaxed")}
       >
-        <Text style={{ fontSize: 18 }}>😌 Relaxed</Text>
+        <ThemedText style={{ fontSize: 18 }}>😌 Relaxed</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={{ padding: 16, backgroundColor: "#FFB75E", borderRadius: 16 }}
         onPress={() => handleSelect("energetic")}
       >
-        <Text style={{ fontSize: 18 }}>⚡ Energetic</Text>
+        <ThemedText style={{ fontSize: 18 }}>⚡ Energetic</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={{ padding: 16, backgroundColor: "#FF6F6F", borderRadius: 16 }}
         onPress={() => handleSelect("angry")}
       >
-        <Text style={{ fontSize: 18 }}>😡 Angry</Text>
+        <ThemedText style={{ fontSize: 18 }}>😡 Angry</ThemedText>
       </TouchableOpacity>
     </View>
   );
