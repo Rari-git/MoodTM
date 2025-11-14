@@ -19,7 +19,7 @@ export default function Register() {
       />
 
       <TextInput
-        placeholder="Parolă"
+        placeholder="Password"
         secureTextEntry
         style={{
           padding: 12,
@@ -43,7 +43,7 @@ export default function Register() {
             fontWeight: "bold",
           }}
         >
-          Creează cont
+          Create Account
         </Text>
       </TouchableOpacity>
 
