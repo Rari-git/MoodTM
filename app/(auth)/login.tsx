@@ -4,7 +4,7 @@ export default function Login() {
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: "center" }}>
       
-      <Text style={{ fontSize: 28, fontWeight: "bold", marginBottom: 20 }}>
+      <Text style={{ fontSize: 28, fontWeight: "bold", marginBottom: 20 , textAlign:"center"}}>
         Logare
       </Text>
 
