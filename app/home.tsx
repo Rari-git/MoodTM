@@ -1,10 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import React from "react";
 import { Image, ScrollView, View } from "react-native";
-import ThemedText from "../../components/ThemedText";
-import WidgetCard from "../../components/WidgetCard";
-import { moodColors } from "../../constants/moodColors";
-import { useMood } from "../../store/useMood";
+import ThemedText from "../components/ThemedText";
+import WidgetCard from "../components/WidgetCard";
+import { moodColors } from "../constants/moodColors";
+import { useMood } from "../store/useMood";
 
 export default function Home() {
   const mood = useMood((s) => s.mood);
@@ -14,13 +15,11 @@ export default function Home() {
   return (
     <LinearGradient colors={colors} style={{ flex: 1 }}>
       <ScrollView
-        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           padding: 24,
-          paddingTop: 60,
           paddingBottom: 120,
-          gap: 30,
         }}
+        showsVerticalScrollIndicator={false}
       >
         {/* HEADER CARD */}
         <View
@@ -29,9 +28,9 @@ export default function Home() {
             padding: 20,
             borderRadius: 20,
             flexDirection: "row",
-            alignItems: "center",
             gap: 15,
-            backdropFilter: "blur(10px)",
+            marginTop: 40,
+            alignItems: "center",
           }}
         >
           <Image
@@ -42,40 +41,35 @@ export default function Home() {
             <ThemedText style={{ fontSize: 26, fontWeight: "bold" }}>
               Welcome!
             </ThemedText>
-            <ThemedText style={{ opacity: 0.8 }}>
-              Your daily mood companion
-            </ThemedText>
+            <ThemedText>Your daily mood companion</ThemedText>
           </View>
         </View>
 
         {/* SECTION TITLE */}
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: 30 }}>
           <ThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
             Recommendations for you
           </ThemedText>
         </View>
 
-        {/* WIDGETS LIST */}
-        <View style={{ gap: 20 }}>
+        {/* WIDGETS */}
+        <View style={{ gap: 20, marginTop: 16 }}>
           <WidgetCard
             title="What's your mood?"
             subtitle="Set your mood for the day"
             icon="🌤️"
-            onPress={() => router.push("../mood")}
+            onPress={() => router.push("/mood")}
           />
-
           <WidgetCard
-            title="Wha should I do today?"
+            title="What should I do today?"
             subtitle="Find activities based on your mood"
             icon="🎯"
           />
-
           <WidgetCard
             title="Where should I eat today?"
             subtitle="Find restaurants based on your mood"
             icon="🍽️"
           />
-
           <WidgetCard
             title="What should I visit today?"
             subtitle="Find places to visit based on your mood"
