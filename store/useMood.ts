@@ -7,6 +7,6 @@ type MoodState = {
 };
 
 export const useMood = create<MoodState>((set) => ({
-  mood: "happy", // 👈 default
+  mood: "happy",
   setMood: (mood) => set({ mood }),
 }));

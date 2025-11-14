@@ -21,4 +21,4 @@ export const moodColors = {
   },
 } as const;
 
-export type Mood = keyof typeof moodColors; // "happy" | "sad" | ...
+export type Mood = keyof typeof moodColors;

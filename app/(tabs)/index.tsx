@@ -2,7 +2,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ScrollView, View } from "react-native";
 import HomeHeader from "../../components/HomeHeader";
-import SectionTitle from "../../components/SectionTitle";
 import WidgetCard from "../../components/WidgetCard";
 import { moodColors } from "../../constants/moodColors";
 import { useMood } from "../../store/useMood";
@@ -11,7 +10,6 @@ export default function Home() {
   const mood = useMood((state) => state.mood);
   const router = useRouter();
 
-  // Select background colors depending on mood
   const colors =
     mood && moodColors[mood]
       ? moodColors[mood].background
@@ -21,9 +19,6 @@ export default function Home() {
     <LinearGradient colors={colors} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 20 }}>
         <HomeHeader />
-
-        <SectionTitle text="Recommendations for you" />
-
         <View style={{ gap: 16 }}>
           {/* Open mood picker */}
           <WidgetCard

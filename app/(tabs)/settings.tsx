@@ -7,7 +7,7 @@ import { useMood } from "../../store/useMood";
 
 export default function Settings() {
   const mood = useMood((state) => state.mood);
-  const bgColors = moodColors[mood].background; // ✅ tuple corect
+  const bgColors = moodColors[mood].background; 
 
   const [notifications, setNotifications] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);

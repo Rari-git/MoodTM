@@ -7,7 +7,7 @@ import { useMood } from "../../store/useMood";
 export default function Profile() {
   const mood = useMood((state) => state.mood);
 
-  const bgColors = moodColors[mood].background; // ✅ tuple corect
+  const bgColors = moodColors[mood].background;
 
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
