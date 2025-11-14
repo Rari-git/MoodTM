@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import ThemedText from "./ThemedText";
 
 export default function HomeHeader() {
   return (
     <View style={{ marginBottom: 24 }}>
-      <Text style={{ fontSize: 28, fontWeight: "700" }}>
+      <ThemedText style={{ fontSize: 38, fontWeight: "bold" }}>
         Welcome!
-      </Text>
+      </ThemedText>
     </View>
   );
 }

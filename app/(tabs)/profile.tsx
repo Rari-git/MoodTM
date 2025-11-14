@@ -1,9 +1,69 @@
-import { Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Image, TouchableOpacity, View } from "react-native";
+import ThemedText from "../../components/ThemedText";
+import { moodColors } from "../../constants/moodColors";
+import { useMood } from "../../store/useMood";
 
-export default function ProfileScreen() {
+export default function Profile() {
+  const mood = useMood((state) => state.mood);
+  const bgColors = moodColors[mood].background;
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ fontSize: 20 }}>PROFILE</Text>
-    </View>
+    <LinearGradient colors={bgColors} style={{ flex: 1 }}>
+      <View style={{ flex: 1, padding: 24, gap: 24 }}>
+        <View style={{ alignItems: "center", gap: 12, marginTop: 20 }}>
+          <Image
+            source={{ uri: "https://i.pravatar.cc/200" }}
+            style={{ width: 120, height: 120, borderRadius: 60 }}
+          />
+
+          <ThemedText style={{ fontSize: 32, fontWeight: "bold" }}>
+            Your Profile
+          </ThemedText>
+
+          <ThemedText>
+            View your info and preferences
+          </ThemedText>
+        </View>
+
+        <View style={{ gap: 16 }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              padding: 16,
+              borderRadius: 14,
+            }}
+          >
+            <ThemedText style={{ fontSize: 18 }}>
+              Edit Profile
+            </ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              padding: 16,
+              borderRadius: 14,
+            }}
+          >
+            <ThemedText style={{ fontSize: 18 }}>
+              Change Password
+            </ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              padding: 16,
+              borderRadius: 14,
+            }}
+          >
+            <ThemedText style={{ fontSize: 18 }}>
+              Logout
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </LinearGradient>
   );
 }
