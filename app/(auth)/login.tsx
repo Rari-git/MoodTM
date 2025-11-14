@@ -38,17 +38,15 @@ export default function Login() {
     ]).start();
   }, []);
 
-  // FORM STATE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  // FOCUS STATE
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPassFocused, setIsPassFocused] = useState(false);
 
-  // BUTTON ANIMATION
   const tapAnim = useRef(new Animated.Value(1)).current;
+
   const animateButton = () => {
     Animated.sequence([
       Animated.timing(tapAnim, { toValue: 0.95, duration: 80, useNativeDriver: true }),
@@ -56,13 +54,22 @@ export default function Login() {
     ]).start();
   };
 
-  // HANDLE LOGIN
   const handleConnect = async () => {
-    // Aici vei face login real când ai backend.
     if (email.length > 2 && password.length > 2) {
       await AsyncStorage.setItem("isLoggedIn", "true");
       router.replace("/(tabs)");
     }
+  };
+
+  // style comun pentru a elimina toate chenarele din interior
+  const inputInnerStyle = {
+    flex: 1,
+    fontSize: 16,
+    borderWidth: 0,
+    outlineWidth: 0,
+    paddingVertical: 0,
+    shadowColor: "transparent",
+    shadowOpacity: 0,
   };
 
   return (
@@ -72,7 +79,7 @@ export default function Login() {
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
         
-        {/* LOGO + TITLE */}
+        {/* LOGO */}
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -140,11 +147,7 @@ export default function Login() {
                 onBlur={() => setIsEmailFocused(false)}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                style={{
-                  fontSize: 16,
-                  borderWidth: 0,
-                  outlineWidth: 0,
-                }}
+                style={inputInnerStyle}
               />
             </View>
 
@@ -170,12 +173,7 @@ export default function Login() {
                 onChangeText={setPassword}
                 onFocus={() => setIsPassFocused(true)}
                 onBlur={() => setIsPassFocused(false)}
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  borderWidth: 0,
-                  outlineWidth: 0,
-                }}
+                style={inputInnerStyle}
               />
 
               <TouchableOpacity onPress={() => setShowPass(!showPass)}>
