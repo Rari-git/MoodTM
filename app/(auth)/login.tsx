@@ -19,7 +19,7 @@ export default function Login() {
       />
 
       <TextInput
-        placeholder="Parolă"
+        placeholder="Password"
         secureTextEntry
         style={{
           padding: 12,
@@ -43,7 +43,7 @@ export default function Login() {
             fontWeight: "bold",
           }}
         >
-          Conectează-te
+          Connect
         </Text>
       </TouchableOpacity>
 
