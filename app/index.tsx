@@ -9,7 +9,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Unihack go brrr</Text>
+      <Text>Unihack ggbgby</Text>
     </View>
   );
-}
+};
