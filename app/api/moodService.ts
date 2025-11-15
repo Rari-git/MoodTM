@@ -1,4 +1,4 @@
-import { api } from "../app/api/apiClient";
+import { api } from "./apiClient";
 
 export type MoodType = "happy" | "sad" | "relaxed" | "energetic" | "angry";
 
