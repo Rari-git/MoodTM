@@ -14,9 +14,10 @@ export default function GradientIcon({
 }) {
   const mood = useMood((state) => state.currentMood);
 
+  // CORECTAT: Folosim 'background' în loc de 'card'
   const colors =
     mood && moodColors[mood]
-      ? moodColors[mood].card
+      ? moodColors[mood].background
       : ["#8EC5FC", "#E0C3FC"];
 
   if (!focused) {
@@ -33,6 +34,7 @@ export default function GradientIcon({
         height: size,
         justifyContent: "center",
         alignItems: "center",
+        borderRadius: size / 2,
       }}
     >
       <Ionicons name={name as any} size={size - 4} color="white" />
