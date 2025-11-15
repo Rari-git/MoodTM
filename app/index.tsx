@@ -1,42 +1,35 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { View } from "react-native";
 
-export default function Index() {
-  const [status, setStatus] = useState<"loading" | "loggedIn" | "loggedOut">(
-    "loading"
-  );
+export default function Start() {
+  const router = useRouter();
 
   useEffect(() => {
-    const checkLogin = async () => {
+    const check = async () => {
       try {
-        const value = await AsyncStorage.getItem("isLoggedIn");
-        if (value === "true") {
-          setStatus("loggedIn");
+        const firstTime = await AsyncStorage.getItem("firstTime");
+        const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+
+        console.log("First time:", firstTime);
+        console.log("Is logged in:", isLoggedIn);
+
+        if (!firstTime) {
+          router.replace("/onboarding");
+        } else if (isLoggedIn !== "true") {
+          router.replace("/(auth)/login");
         } else {
-          setStatus("loggedOut");
+          router.replace("/(main)/home");
         }
       } catch (e) {
-        console.log(e);
-        setStatus("loggedOut");
+        console.error("Error checking auth:", e);
+        router.replace("/(auth)/login");
       }
     };
 
-    checkLogin();
-  }, []);
+    check();
+  }, [router]);
 
-  if (status === "loading") {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (status === "loggedIn") {
-    return <Redirect href="/(tabs)" />;
-  }
-
-  return <Redirect href="/(auth)/login" />;
+  return <View style={{ flex: 1, backgroundColor: "white" }} />;
 }

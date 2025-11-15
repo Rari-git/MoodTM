@@ -22,9 +22,7 @@ export default function Profile() {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmNewPass, setConfirmNewPass] = useState("");
-
   const [message, setMessage] = useState("");
-
   const [currentUser, setCurrentUser] = useState<StoredUser | null>(null);
 
   // Căutăm userul logat
@@ -46,6 +44,7 @@ export default function Profile() {
   // LOGOUT
   const handleLogout = async () => {
     await AsyncStorage.removeItem("isLoggedIn");
+    await AsyncStorage.removeItem("loggedEmail");
     router.replace("/(auth)/login");
   };
 
@@ -101,26 +100,24 @@ export default function Profile() {
 
   return (
     <LinearGradient colors={bgColors} style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 24 }}>
-
+      <View style={{ flex: 1, padding: 24, marginTop: 50 }}>
+        
         {/* PROFILE HEADER */}
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{ alignItems: "center", gap: 12 }}>
           <Image
             source={{ uri: "https://i.pravatar.cc/200" }}
             style={{ width: 120, height: 120, borderRadius: 60 }}
           />
 
-          <ThemedText style={{ fontSize: 32, fontWeight: "bold", marginTop: 12 }}>
+          <ThemedText style={{ fontSize: 32, fontWeight: "bold" }}>
             Your Profile
           </ThemedText>
 
-          <ThemedText style={{ marginTop: 4 }}>
-            View your info and preferences
-          </ThemedText>
+          <ThemedText>View your info and preferences</ThemedText>
         </View>
 
         {/* OPTIONS */}
-        <View style={{ marginTop: 32 }}>
+        <View style={{ marginTop: 32, gap: 16 }}>
 
           {/* Edit Profile */}
           <TouchableOpacity
@@ -128,7 +125,6 @@ export default function Profile() {
               backgroundColor: "rgba(255,255,255,0.2)",
               padding: 16,
               borderRadius: 14,
-              marginBottom: 16,
             }}
           >
             <ThemedText style={{ fontSize: 18 }}>Edit Profile</ThemedText>
@@ -141,7 +137,6 @@ export default function Profile() {
               backgroundColor: "rgba(255,255,255,0.2)",
               padding: 16,
               borderRadius: 14,
-              marginBottom: 16,
             }}
           >
             <ThemedText style={{ fontSize: 18 }}>Change Password</ThemedText>
