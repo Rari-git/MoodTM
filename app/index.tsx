@@ -1,20 +1,20 @@
-// Bottom tab bar with swipe + Mood Selection Screen + Mood-based colors
-import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Redirect } from "expo-router";
+import React, { useEffect, useState } from "react";
+
+import { Ionicons } from "@expo/vector-icons";
 import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    useWindowDimensions,
-    View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
 } from "react-native";
 import { TabView } from "react-native-tab-view";
 
-// 🎨 Mood colors
-const moodColors: any = {
+const moodColors: Record<string, string> = {
   happy: "#FFE066",
   sad: "#A0C4FF",
   angry: "#FF6B6B",
@@ -22,18 +22,31 @@ const moodColors: any = {
   bored: "#D3D3D3",
 };
 
-export default function MainTabs() {
+export default function MainIndex() {
+
+  // 1️⃣ LOGIN CHECK — prima logică, dar NU returnăm încă
+  const [logged, setLogged] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const u = await AsyncStorage.getItem("loggedUsername");
+      setLogged(!!u);
+    })();
+  }, []);
+
+  // 2️⃣ DEFINIM HOOK-URILE TAB-URILOR (trebuie să fie sus, înainte de CONDITIONAL RETURN)
   const layout = useWindowDimensions();
 
   const [mood, setMood] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
-  const [routes] = useState([
+  const [routes] = useState<
+    { key: string; title: string; icon: React.ComponentProps<typeof Ionicons>["name"] }[]
+  >([
     { key: "home", title: "Home", icon: "home" },
     { key: "profile", title: "Profile", icon: "person" },
     { key: "settings", title: "Settings", icon: "settings" },
   ]);
 
-  // Load saved mood
   useEffect(() => {
     (async () => {
       const savedMood = await AsyncStorage.getItem("mood");
@@ -41,7 +54,6 @@ export default function MainTabs() {
     })();
   }, []);
 
-  // Immersive fullscreen
   useEffect(() => {
     NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
@@ -52,6 +64,11 @@ export default function MainTabs() {
     setMood(m);
   };
 
+  // 3️⃣ ABIA ACUM — putem verifica LOGIN și RETURN
+  if (logged === null) return null;
+  if (!logged) return <Redirect href="/(auth)/login" />;
+
+  // 4️⃣ USER IS LOGGED — restul aplicației
   const renderScene = ({ route }: { route: { key: string } }) => {
     const bg = mood ? moodColors[mood] : "white";
 
@@ -60,27 +77,15 @@ export default function MainTabs() {
         return (
           <View style={[styles.scene, { backgroundColor: bg }]}>
             <Text style={styles.title}>Welcome to MoodTM</Text>
-            <Text style={{ fontSize: 16, marginTop: 5 }}>Your daily mood companion</Text>
 
             <TouchableOpacity
               style={styles.actionBtn}
               onPress={async () => {
                 await AsyncStorage.removeItem("mood");
                 setMood(null);
-              }}>
+              }}
+            >
               <Text style={styles.actionText}>Change Mood</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.actionBtn}>
-              <Text style={styles.actionText}>What should I do today?</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.actionBtn}>
-              <Text style={styles.actionText}>Where should I eat today?</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.actionBtn}>
-              <Text style={styles.actionText}>What should I visit today?</Text>
             </TouchableOpacity>
           </View>
         );
@@ -89,20 +94,33 @@ export default function MainTabs() {
         return (
           <View style={[styles.scene, { backgroundColor: bg }]}>
             <Text style={styles.title}>Profile</Text>
+
+            {/* Logout */}
+            <TouchableOpacity
+              style={[styles.actionBtn, { backgroundColor: "#c62828" }]}
+              onPress={async () => {
+                await AsyncStorage.removeItem("loggedUsername");
+                setLogged(false);
+              }}
+            >
+              <Text style={styles.actionText}>Logout</Text>
+            </TouchableOpacity>
           </View>
         );
+
       case "settings":
         return (
           <View style={[styles.scene, { backgroundColor: bg }]}>
             <Text style={styles.title}>Settings</Text>
           </View>
         );
+
       default:
         return null;
     }
   };
 
-  // 🟡 Mood selection screen
+  // 5️⃣ MOOOD SELECT
   if (!mood) {
     return (
       <View style={styles.moodScreen}>
@@ -135,6 +153,7 @@ export default function MainTabs() {
     );
   }
 
+  // 6️⃣ MAIN APP
   const bgColor = moodColors[mood] || "white";
 
   return (
@@ -151,15 +170,8 @@ export default function MainTabs() {
 
       <View style={[styles.tabBar, { backgroundColor: bgColor }]}>
         {routes.map((route, i) => (
-          <TouchableOpacity
-            key={route.key}
-            style={styles.tabItem}
-            onPress={() => setIndex(i)}>
-            <Ionicons
-              name={route.icon}
-              size={26}
-              color={i === index ? "black" : "#555"}
-            />
+          <TouchableOpacity key={route.key} style={styles.tabItem} onPress={() => setIndex(i)}>
+            <Ionicons name={route.icon} size={26} color={i === index ? "black" : "#555"} />
             <Text style={{ color: i === index ? "black" : "#555", fontSize: 12 }}>
               {route.title}
             </Text>
@@ -170,7 +182,7 @@ export default function MainTabs() {
   );
 }
 
-// STYLES
+// Styles
 const styles = StyleSheet.create({
   moodScreen: {
     flex: 1,
