@@ -2,11 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import PagerView from "react-native-pager-view";
+
 import Home from "./home";
 import Profile from "./profile";
 import Settings from "./settings";
 
-export default function MainScreen() {
+export default function TabsLayout() {
   const pagerRef = useRef<PagerView>(null);
   const [page, setPage] = useState(0);
 
@@ -41,7 +42,7 @@ export default function MainScreen() {
       <View style={styles.tabBar}>
         <TouchableOpacity onPress={() => goTo(0)} style={styles.tabItem}>
           <Ionicons
-            name="home-outline"
+            name={page === 0 ? "home" : "home-outline"}
             size={26}
             color={page === 0 ? "#000" : "#aaa"}
           />
@@ -49,7 +50,7 @@ export default function MainScreen() {
 
         <TouchableOpacity onPress={() => goTo(1)} style={styles.tabItem}>
           <Ionicons
-            name="person-circle-outline"
+            name={page === 1 ? "person-circle" : "person-circle-outline"}
             size={26}
             color={page === 1 ? "#000" : "#aaa"}
           />
@@ -57,7 +58,7 @@ export default function MainScreen() {
 
         <TouchableOpacity onPress={() => goTo(2)} style={styles.tabItem}>
           <Ionicons
-            name="settings-outline"
+            name={page === 2 ? "settings" : "settings-outline"}
             size={26}
             color={page === 2 ? "#000" : "#aaa"}
           />

@@ -85,7 +85,9 @@ export default function Login() {
 
     await AsyncStorage.setItem("isLoggedIn", "true");
     await AsyncStorage.setItem("loggedEmail", email);
-    router.replace("/(main)");
+    
+    // CORECT: Folosește replace cu ruta corectă
+    router.replace("/(tabs)/home");
   };
 
   // style folosit pentru interiorul inputurilor
@@ -250,7 +252,7 @@ export default function Login() {
 
             {/* REGISTER LINK */}
             <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18 }}>
-              <Text style={{ fontSize: 14, color: "#777" }}>Don’t have an account? </Text>
+              <Text style={{ fontSize: 14, color: "#777" }}>Don't have an account? </Text>
               <Link
                 href="/(auth)/register"
                 style={{ fontSize: 14, color: "#4c84ff", fontWeight: "600" }}
