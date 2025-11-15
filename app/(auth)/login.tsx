@@ -14,13 +14,14 @@ import {
 } from "react-native";
 
 type StoredUser = {
-  name: string;
+  name: string; // username
   email: string;
   password: string;
 };
 
+const passwordRegex = /^.{2,}$/; // minim 2 caractere
+
 export default function Login() {
-  // ANIMATIONS
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -45,17 +46,18 @@ export default function Login() {
     ]).start();
   }, []);
 
-  // FORM STATE
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [showPass, setShowPass] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  // FOCUS STATE
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isUsernameFocused, setIsUsernameFocused] = useState(false);
   const [isPassFocused, setIsPassFocused] = useState(false);
 
-  // BUTTON ANIMATION
+  const [rememberMe, setRememberMe] = useState(false);
+
   const tapAnim = useRef(new Animated.Value(1)).current;
   const animateButton = () => {
     Animated.sequence([
@@ -64,42 +66,51 @@ export default function Login() {
     ]).start();
   };
 
-  // LOGIN LOGIC
   const handleConnect = async () => {
     setLoginError("");
+    setPasswordError("");
 
-    if (!email || !password) {
-      setLoginError("Complete email and password!");
+    if (!username || !password) {
+      setLoginError("Completează username și parola!");
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setPasswordError("Parola trebuie să aibă minim 2 caractere.");
       return;
     }
 
     const stored = await AsyncStorage.getItem("users");
     const users: StoredUser[] = stored ? JSON.parse(stored) : [];
 
-    const existing = users.find((u: StoredUser) => u.email === email);
+    const existing = users.find(
+      (u) => u.name.toLowerCase() === username.toLowerCase()
+    );
 
     if (!existing || existing.password !== password) {
-      setLoginError("Email sau parolă greșite.");
+      setLoginError("Username sau parolă greșite.");
       return;
     }
 
     await AsyncStorage.setItem("isLoggedIn", "true");
-    await AsyncStorage.setItem("loggedEmail", email);
-    
-    // CORECT: Folosește replace cu ruta corectă
+    await AsyncStorage.setItem("loggedUsername", existing.name);
+
+    if (rememberMe) {
+      await AsyncStorage.setItem("autoLogin", "true");
+    } else {
+      await AsyncStorage.removeItem("autoLogin");
+    }
+
     router.replace("/(tabs)/home" as any);
   };
 
-  // style folosit pentru interiorul inputurilor
   const inputInnerStyle = {
     flex: 1,
     fontSize: 16,
     borderWidth: 0,
     outlineWidth: 0,
     paddingVertical: 0,
-    shadowColor: "transparent",
-    shadowOpacity: 0,
-  };
+  } as const;
 
   return (
     <KeyboardAvoidingView
@@ -107,7 +118,6 @@ export default function Login() {
       style={{ flex: 1 }}
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
-
         {/* LOGO */}
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
@@ -153,11 +163,11 @@ export default function Login() {
               Welcome back 👋
             </Text>
 
-            {/* EMAIL */}
+            {/* USERNAME */}
             <View
               style={{
                 borderWidth: 2,
-                borderColor: isEmailFocused ? "#000" : "#d0d4df",
+                borderColor: isUsernameFocused ? "#000" : "#d0d4df",
                 borderRadius: 12,
                 backgroundColor: "#f8f9ff",
                 height: 54,
@@ -167,13 +177,12 @@ export default function Login() {
               }}
             >
               <TextInput
-                placeholder="Email"
+                placeholder="Username"
                 placeholderTextColor="#aaa"
-                value={email}
-                onChangeText={setEmail}
-                onFocus={() => setIsEmailFocused(true)}
-                onBlur={() => setIsEmailFocused(false)}
-                keyboardType="email-address"
+                value={username}
+                onChangeText={setUsername}
+                onFocus={() => setIsUsernameFocused(true)}
+                onBlur={() => setIsUsernameFocused(false)}
                 autoCapitalize="none"
                 style={inputInnerStyle}
               />
@@ -185,12 +194,12 @@ export default function Login() {
                 flexDirection: "row",
                 alignItems: "center",
                 borderWidth: 2,
-                borderColor: isPassFocused ? "#000" : "#d0d4df",
+                borderColor: passwordError ? "red" : isPassFocused ? "#000" : "#d0d4df",
                 borderRadius: 12,
                 backgroundColor: "#f8f9ff",
                 height: 54,
                 paddingHorizontal: 14,
-                marginBottom: 18,
+                marginBottom: 4,
               }}
             >
               <TextInput
@@ -198,7 +207,14 @@ export default function Login() {
                 placeholderTextColor="#aaa"
                 secureTextEntry={!showPass}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(value) => {
+                  setPassword(value);
+                  if (value.length > 0 && !passwordRegex.test(value)) {
+                    setPasswordError("Parola trebuie să aibă minim 2 caractere.");
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
                 onFocus={() => setIsPassFocused(true)}
                 onBlur={() => setIsPassFocused(false)}
                 style={inputInnerStyle}
@@ -208,6 +224,44 @@ export default function Login() {
                 <Ionicons name={showPass ? "eye-off" : "eye"} size={24} color="#777" />
               </TouchableOpacity>
             </View>
+            {passwordError.length > 0 && (
+              <Text
+                style={{
+                  color: "red",
+                  marginBottom: 10,
+                  fontSize: 14,
+                }}
+              >
+                {passwordError}
+              </Text>
+            )}
+
+            {/* FORGOT PASSWORD */}
+            <TouchableOpacity
+              onPress={() => router.push("/(auth)/forgot")}
+              style={{ marginBottom: 12 }}
+            >
+              <Text style={{ color: "#4c84ff", textAlign: "right" }}>
+                Forgot password?
+              </Text>
+            </TouchableOpacity>
+
+            {/* REMEMBER ME */}
+            <TouchableOpacity
+              onPress={() => setRememberMe(!rememberMe)}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <Ionicons
+                name={rememberMe ? "checkbox-outline" : "square-outline"}
+                size={22}
+                color="#4c84ff"
+              />
+              <Text style={{ marginLeft: 6, color: "#444" }}>Keep me logged in</Text>
+            </TouchableOpacity>
 
             {/* BUTTON */}
             <Animated.View style={{ transform: [{ scale: tapAnim }] }}>
@@ -236,7 +290,7 @@ export default function Login() {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* ERROR */}
+            {/* ERROR LOGIN */}
             {loginError.length > 0 && (
               <Text
                 style={{
@@ -251,7 +305,9 @@ export default function Login() {
             )}
 
             {/* REGISTER LINK */}
-            <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "center", marginTop: 18 }}
+            >
               <Text style={{ fontSize: 14, color: "#777" }}>Don't have an account? </Text>
               <Link
                 href="/(auth)/register"
@@ -260,7 +316,6 @@ export default function Login() {
                 Create one
               </Link>
             </View>
-
           </Animated.View>
         </View>
       </LinearGradient>

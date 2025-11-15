@@ -14,10 +14,14 @@ import {
 } from "react-native";
 
 type StoredUser = {
-  name: string;
+  name: string; // username
   email: string;
   password: string;
 };
+
+const usernameRegex = /^.{4,}$/; // minim 4 caractere
+const passwordRegex = /^.{2,}$/; // minim 2 caractere (momentan)
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Register() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -50,6 +54,10 @@ export default function Register() {
   const [passwordError, setPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
 
+  const [nameError, setNameError] = useState("");
+  const [passLengthError, setPassLengthError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
   const [fName, setFName] = useState(false);
   const [fEmail, setFEmail] = useState(false);
   const [fPass, setFPass] = useState(false);
@@ -63,8 +71,27 @@ export default function Register() {
       return;
     }
 
-    if (passwordError) {
-      setGeneralError("Parolele nu sunt la fel.");
+    if (!usernameRegex.test(name)) {
+      setNameError("Username trebuie să aibă minim 4 caractere.");
+      setGeneralError("Te rog corectează username-ul.");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      setEmailError("Introdu un email valid.");
+      setGeneralError("Te rog corectează email-ul.");
+      return;
+    }
+
+    if (!passwordRegex.test(pass)) {
+      setPassLengthError("Parola trebuie să aibă minim 2 caractere.");
+      setGeneralError("Te rog corectează parola.");
+      return;
+    }
+
+    if (pass !== confirmPass) {
+      setPasswordError("Parolele nu sunt la fel.");
+      setGeneralError("Te rog corectează parolele.");
       return;
     }
 
@@ -88,8 +115,9 @@ export default function Register() {
 
     await AsyncStorage.setItem("users", JSON.stringify(users));
 
-    // NU îl logăm automat, îl trimitem la login
     await AsyncStorage.removeItem("isLoggedIn");
+    await AsyncStorage.removeItem("autoLogin");
+
     router.replace("/(auth)/login");
   };
 
@@ -99,7 +127,6 @@ export default function Register() {
       style={{ flex: 1 }}
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
-        
         <View style={{ alignItems: "center", marginTop: 60, marginBottom: 10 }}>
           <View
             style={{
@@ -133,55 +160,33 @@ export default function Register() {
             elevation: 10,
           }}
         >
-
-          {/* NAME */}
+          {/* USERNAME */}
           <View
             style={{
               borderWidth: 2,
-              borderColor: fName ? "#000" : "#d0d4df",
+              borderColor: nameError ? "red" : fName ? "#000" : "#d0d4df",
               borderRadius: 12,
               backgroundColor: "#f8f9ff",
               height: 54,
               justifyContent: "center",
               paddingHorizontal: 14,
-              marginBottom: 16,
+              marginBottom: 4,
             }}
           >
             <TextInput
-              placeholder="Your Name"
+              placeholder="Username"
               placeholderTextColor="#aaa"
               value={name}
-              onChangeText={setName}
+              onChangeText={(value) => {
+                setName(value);
+                if (value.length > 0 && !usernameRegex.test(value)) {
+                  setNameError("Username trebuie să aibă minim 4 caractere.");
+                } else {
+                  setNameError("");
+                }
+              }}
               onFocus={() => setFName(true)}
               onBlur={() => setFName(false)}
-              style={{
-                fontSize: 16,
-                borderWidth: 0,
-                outlineWidth: 0,
-              }}
-            />
-          </View>
-
-          {/* EMAIL */}
-          <View
-            style={{
-              borderWidth: 2,
-              borderColor: fEmail ? "#000" : "#d0d4df",
-              borderRadius: 12,
-              backgroundColor: "#f8f9ff",
-              height: 54,
-              justifyContent: "center",
-              paddingHorizontal: 14,
-              marginBottom: 16,
-            }}
-          >
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor="#aaa"
-              value={email}
-              onChangeText={setEmail}
-              onFocus={() => setFEmail(true)}
-              onBlur={() => setFEmail(false)}
               autoCapitalize="none"
               style={{
                 fontSize: 16,
@@ -190,19 +195,67 @@ export default function Register() {
               }}
             />
           </View>
+          {nameError.length > 0 && (
+            <Text style={{ color: "red", marginBottom: 10, fontSize: 14 }}>
+              {nameError}
+            </Text>
+          )}
+
+          {/* EMAIL */}
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: emailError ? "red" : fEmail ? "#000" : "#d0d4df",
+              borderRadius: 12,
+              backgroundColor: "#f8f9ff",
+              height: 54,
+              justifyContent: "center",
+              paddingHorizontal: 14,
+              marginBottom: 4,
+            }}
+          >
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="#aaa"
+              value={email}
+              onChangeText={(value) => {
+                setEmail(value);
+                if (value.length > 0 && !emailRegex.test(value)) {
+                  setEmailError("Introdu un email valid.");
+                } else {
+                  setEmailError("");
+                }
+              }}
+              onFocus={() => setFEmail(true)}
+              onBlur={() => setFEmail(false)}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              style={{
+                fontSize: 16,
+                borderWidth: 0,
+                outlineWidth: 0,
+              }}
+            />
+          </View>
+          {emailError.length > 0 && (
+            <Text style={{ color: "red", marginBottom: 10, fontSize: 14 }}>
+              {emailError}
+            </Text>
+          )}
 
           {/* PASSWORD */}
           <View
             style={{
               borderWidth: 2,
-              borderColor: passwordError ? "red" : fPass ? "#000" : "#d0d4df",
+              borderColor:
+                passwordError || passLengthError ? "red" : fPass ? "#000" : "#d0d4df",
               borderRadius: 12,
               backgroundColor: "#f8f9ff",
               height: 54,
               paddingHorizontal: 14,
               flexDirection: "row",
               alignItems: "center",
-              marginBottom: 16,
+              marginBottom: 4,
             }}
           >
             <TextInput
@@ -213,8 +266,14 @@ export default function Register() {
               onChangeText={(value) => {
                 setPass(value);
 
+                if (value.length > 0 && !passwordRegex.test(value)) {
+                  setPassLengthError("Parola trebuie să aibă minim 2 caractere.");
+                } else {
+                  setPassLengthError("");
+                }
+
                 if (confirmPass.length > 0 && value !== confirmPass) {
-                  setPasswordError("Passwords do not match");
+                  setPasswordError("Parolele nu sunt la fel.");
                 } else {
                   setPasswordError("");
                 }
@@ -237,6 +296,11 @@ export default function Register() {
               />
             </TouchableOpacity>
           </View>
+          {passLengthError.length > 0 && (
+            <Text style={{ color: "red", marginBottom: 10, fontSize: 14 }}>
+              {passLengthError}
+            </Text>
+          )}
 
           {/* CONFIRM PASS */}
           <View
@@ -260,7 +324,7 @@ export default function Register() {
                 setConfirmPass(value);
 
                 if (pass !== value) {
-                  setPasswordError("Passwords do not match");
+                  setPasswordError("Parolele nu sunt la fel.");
                 } else {
                   setPasswordError("");
                 }
@@ -294,7 +358,7 @@ export default function Register() {
             <Text
               style={{
                 color: "red",
-                marginTop: 4,
+                marginTop: 8,
                 marginBottom: 8,
                 fontSize: 14,
               }}
@@ -346,7 +410,6 @@ export default function Register() {
               Login
             </Link>
           </View>
-
         </Animated.View>
       </LinearGradient>
     </KeyboardAvoidingView>
