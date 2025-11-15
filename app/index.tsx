@@ -16,11 +16,11 @@ export default function Start() {
         console.log("Is logged in:", isLoggedIn);
 
         if (!firstTime) {
-          router.replace("/onboarding");
+          router.replace("./onboarding");
         } else if (isLoggedIn !== "true") {
           router.replace("/(auth)/login");
         } else {
-          router.replace("/(main)/home");
+          router.replace("./(main)/home");
         }
       } catch (e) {
         console.error("Error checking auth:", e);
