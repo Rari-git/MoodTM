@@ -47,7 +47,7 @@ export default function Start() {
   }
 
   if (route) {
-    return <Redirect href={route} />;
+    return <Redirect href={route as any} />;
   }
 
   return (
