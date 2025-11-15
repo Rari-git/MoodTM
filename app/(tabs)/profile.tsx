@@ -14,7 +14,7 @@ type StoredUser = {
 };
 
 export default function Profile() {
-  const mood = useMood((state) => state.mood);
+  const mood = useMood((state) => state.currentMood);
   const bgColors = moodColors[mood].background;
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);

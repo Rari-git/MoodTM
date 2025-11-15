@@ -8,7 +8,7 @@ import { moodColors } from "../../constants/moodColors";
 import { useMood } from "../../store/useMood";
 
 export default function Home() {
-  const mood = useMood((s) => s.mood);
+  const mood = useMood((s) => s.currentMood);
   const colors = moodColors[mood].background;
   const router = useRouter();
 

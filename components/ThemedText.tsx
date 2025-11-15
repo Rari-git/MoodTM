@@ -3,7 +3,7 @@ import { moodColors } from "../constants/moodColors";
 import { useMood } from "../store/useMood";
 
 export default function ThemedText({ style, ...rest }: TextProps) {
-  const mood = useMood((s) => s.mood);
+  const mood = useMood((s) => s.currentMood); // CORECTAT: s.currentMood în loc de s.mood
   const textColor = moodColors[mood].text;
 
   // facem style întotdeauna array, ca să putem căuta fontWeight

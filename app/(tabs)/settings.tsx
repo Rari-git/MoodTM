@@ -6,7 +6,7 @@ import { moodColors } from "../../constants/moodColors";
 import { useMood } from "../../store/useMood";
 
 export default function Settings() {
-  const mood = useMood((s) => s.mood);
+  const mood = useMood((s) => s.currentMood);
   const colors = moodColors[mood].background;
 
   const [notifications, setNotifications] = React.useState(true);

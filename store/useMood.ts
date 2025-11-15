@@ -1,36 +1,63 @@
 import { Mood } from "@/constants/moodColors";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from "zustand";
-import { MoodEntry, moodService, MoodType } from "../app/api/moodService";
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { MoodEntry, moodService } from "../app/api/moodService";
 
 interface MoodStore {
-  moods: MoodEntry[];
+  // Pentru mood-ul curent (selected)
+  currentMood: Mood;
+  setCurrentMood: (mood: Mood) => void;
+  
+  // Pentru istoricul mood-urilor (entries)
+  moodEntries: MoodEntry[];
   loading: boolean;
   fetchMoods: () => Promise<void>;
-  addMood: (mood: MoodType, note?: string) => Promise<void>;
+  addMoodEntry: (mood: Mood, note?: string) => Promise<void>;
 }
 
-export const useMoodStore = create<MoodStore>((set) => ({
-  moods: [],
-  loading: false,
+export const useMood = create<MoodStore>()(
+  persist(
+    (set, get) => ({
+      // Current mood state - default la "happy"
+      currentMood: "happy",
+      setCurrentMood: (mood: Mood) => set({ currentMood: mood }),
 
-fetchMoods: async () => {
-    set({ loading: true });
-    const moods = await moodService.getMoods();
-    set({ moods, loading: false });
-  },
+      // Mood entries/history state
+      moodEntries: [],
+      loading: false,
 
-  addMood: async (mood, note) => {
-    const newMood = await moodService.addMood(mood, note);
-    set((state) => ({ moods: [newMood, ...state.moods] }));
-  },
-}));
+      fetchMoods: async () => {
+        set({ loading: true });
+        try {
+          const moods = await moodService.getMoods();
+          set({ moodEntries: moods, loading: false });
+        } catch (error) {
+          console.error("Error fetching moods:", error);
+          set({ loading: false });
+        }
+      },
 
-type MoodState = {
-  mood: Mood;
-  setMood: (m: Mood) => void;
-};
-
-export const useMood = create<MoodState>((set) => ({
-  mood: "happy",
-  setMood: (m) => set({ mood: m }),
-}));
+      addMoodEntry: async (mood: Mood, note?: string) => {
+        try {
+          const newMood = await moodService.addMood(mood, note);
+          set((state) => ({ 
+            moodEntries: [newMood, ...state.moodEntries],
+            currentMood: mood // Setează și mood-ul curent
+          }));
+        } catch (error) {
+          console.error("Error adding mood:", error);
+          throw error;
+        }
+      },
+    }),
+    {
+      name: 'mood-storage',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({ 
+        currentMood: state.currentMood,
+        moodEntries: state.moodEntries 
+      }),
+    }
+  )
+);

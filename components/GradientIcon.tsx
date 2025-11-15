@@ -12,7 +12,7 @@ export default function GradientIcon({
   size: number;
   focused: boolean;
 }) {
-  const mood = useMood((state) => state.mood);
+  const mood = useMood((state) => state.currentMood);
 
   const colors =
     mood && moodColors[mood]
