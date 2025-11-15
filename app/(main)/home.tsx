@@ -2,10 +2,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, ScrollView, View } from "react-native";
-import ThemedText from "../components/ThemedText";
-import WidgetCard from "../components/WidgetCard";
-import { moodColors } from "../constants/moodColors";
-import { useMood } from "../store/useMood";
+import ThemedText from "../../components/ThemedText";
+import WidgetCard from "../../components/WidgetCard";
+import { moodColors } from "../../constants/moodColors";
+import { useMood } from "../../store/useMood";
 
 export default function Home() {
   const mood = useMood((s) => s.mood);

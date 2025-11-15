@@ -2,11 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import PagerView from "react-native-pager-view";
-
-// importăm ecranele
-import Home from "../home";
-import Profile from "../profile";
-import Settings from "../settings";
+import Home from "./home";
+import Profile from "./profile";
+import Settings from "./settings";
 
 export default function MainScreen() {
   const pagerRef = useRef<PagerView>(null);

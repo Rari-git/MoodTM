@@ -84,7 +84,8 @@ export default function Login() {
     }
 
     await AsyncStorage.setItem("isLoggedIn", "true");
-    router.replace("/(tabs)");
+    await AsyncStorage.setItem("loggedEmail", email);
+    router.replace("/(main)");
   };
 
   // style folosit pentru interiorul inputurilor

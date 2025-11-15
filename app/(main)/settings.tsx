@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Switch, View } from "react-native";
-import ThemedText from "../components/ThemedText";
-import { moodColors } from "../constants/moodColors";
-import { useMood } from "../store/useMood";
+import ThemedText from "../../components/ThemedText";
+import { moodColors } from "../../constants/moodColors";
+import { useMood } from "../../store/useMood";
 
 export default function Settings() {
   const mood = useMood((s) => s.mood);

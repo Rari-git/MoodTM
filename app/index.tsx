@@ -12,18 +12,18 @@ export default function Start() {
         const firstTime = await AsyncStorage.getItem("firstTime");
         const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
 
+        console.log("First time:", firstTime);
+        console.log("Is logged in:", isLoggedIn);
+
         if (!firstTime) {
-          // prima dată în aplicație
-          router.replace("./onboarding");
-        } else if (!isLoggedIn) {
-          // a mai intrat, dar nu e logat
+          router.replace("/onboarding");
+        } else if (isLoggedIn !== "true") {
           router.replace("/(auth)/login");
         } else {
-          // e logat
-          router.replace("./main");
+          router.replace("/(main)/home");
         }
       } catch (e) {
-        // fallback: dacă ceva crapă, du-l măcar la login
+        console.error("Error checking auth:", e);
         router.replace("/(auth)/login");
       }
     };
@@ -31,6 +31,5 @@ export default function Start() {
     check();
   }, [router]);
 
-  // ecran gol cât timp decidem unde să-l trimitem
   return <View style={{ flex: 1, backgroundColor: "white" }} />;
 }
