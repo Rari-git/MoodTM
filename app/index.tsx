@@ -1,9 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 export default function Start() {
+  const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [route, setRoute] = useState<"/onboarding" | "/(auth)/login" | "/(tabs)/home" | null>(null);
 
@@ -20,11 +21,11 @@ export default function Start() {
         console.log("Is logged in:", isLoggedIn);
 
         if (!firstTime) {
-          router.replace("/onboarding");
+          setRoute("/onboarding");
         } else if (isLoggedIn !== "true") {
           setRoute("/(auth)/login");
         } else {
-          router.replace("/(main)/home");
+          setRoute("/(tabs)/home");
         }
       } catch (e) {
         console.error("Error checking auth:", e);
