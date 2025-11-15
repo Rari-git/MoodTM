@@ -1,3 +1,4 @@
+import { Mood } from "@/constants/moodColors";
 import { create } from "zustand";
 import { MoodEntry, moodService, MoodType } from "../api/moodService";
 
@@ -24,7 +25,7 @@ fetchMoods: async () => {
   },
 }));
 
- /* type MoodState = {
+type MoodState = {
   mood: Mood;
   setMood: (m: Mood) => void;
 };
@@ -32,4 +33,4 @@ fetchMoods: async () => {
 export const useMood = create<MoodState>((set) => ({
   mood: "happy",
   setMood: (m) => set({ mood: m }),
-}));*/
+}));
