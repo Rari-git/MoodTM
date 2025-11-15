@@ -42,6 +42,7 @@ export default function Profile() {
   const handleLogout = async () => {
     await AsyncStorage.removeItem("isLoggedIn");
     await AsyncStorage.removeItem("loggedEmail");
+    await AsyncStorage.removeItem("autoLogin");
     router.replace("/(auth)/login");
   };
 
@@ -82,6 +83,7 @@ export default function Profile() {
     });
 
     await AsyncStorage.setItem("users", JSON.stringify(updatedUsers));
+    setCurrentUser({ ...currentUser, password: newPass }); // Update local state
 
     setMessage("Password changed successfully!");
     setTimeout(() => {
@@ -98,7 +100,7 @@ export default function Profile() {
       <View style={{ flex: 1, padding: 24, marginTop: 50 }}>
         
         {/* PROFILE HEADER */}
-        <View style={{ alignItems: "center", gap: 12 }}>
+        <View style={{ alignItems: "center", gap: 12, marginBottom: 32 }}>
           <Image
             source={{ uri: "https://i.pravatar.cc/200" }}
             style={{ width: 120, height: 120, borderRadius: 60 }}
@@ -108,12 +110,23 @@ export default function Profile() {
             Your Profile
           </ThemedText>
 
+          {/* ADAUGAT: Afișare informații utilizator */}
+          {currentUser && (
+            <View style={{ alignItems: "center", gap: 4 }}>
+              <ThemedText style={{ fontSize: 18, fontWeight: "600" }}>
+                {currentUser.name}
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, opacity: 0.8 }}>
+                {currentUser.email}
+              </ThemedText>
+            </View>
+          )}
+
           <ThemedText>View your info and preferences</ThemedText>
         </View>
 
         {/* OPTIONS */}
-        <View style={{ marginTop: 32, gap: 16 }}>
-
+        <View style={{ gap: 16 }}>
           {/* Change Password */}
           <TouchableOpacity
             onPress={() => setShowPasswordModal(true)}
@@ -126,18 +139,32 @@ export default function Profile() {
             <ThemedText style={{ fontSize: 18 }}>Change Password</ThemedText>
           </TouchableOpacity>
 
-          {/* LOGOUT BUTTON */}
+          {/* Change Mood */}
           <TouchableOpacity
-            onPress={handleLogout}
+            onPress={() => router.push("/mood?from=profile")}
             style={{
               backgroundColor: "rgba(255,255,255,0.2)",
               padding: 16,
               borderRadius: 14,
             }}
           >
-            <ThemedText style={{ fontSize: 18 }}>Logout</ThemedText>
+            <ThemedText style={{ fontSize: 18 }}>Change Mood</ThemedText>
           </TouchableOpacity>
 
+          {/* LOGOUT BUTTON */}
+          <TouchableOpacity
+            onPress={handleLogout}
+            style={{
+              backgroundColor: "rgba(255, 100, 100, 0.3)",
+              padding: 16,
+              borderRadius: 14,
+              marginTop: 20,
+            }}
+          >
+            <ThemedText style={{ fontSize: 18, color: "#ff6b6b" }}>
+              Logout
+            </ThemedText>
+          </TouchableOpacity>
         </View>
 
         {/* PASSWORD MODAL */}
@@ -174,6 +201,7 @@ export default function Profile() {
                 onChangeText={setOldPass}
                 style={{
                   borderWidth: 1,
+                  borderColor: "#ddd",
                   borderRadius: 10,
                   padding: 12,
                   marginBottom: 12,
@@ -187,6 +215,7 @@ export default function Profile() {
                 onChangeText={setNewPass}
                 style={{
                   borderWidth: 1,
+                  borderColor: "#ddd",
                   borderRadius: 10,
                   padding: 12,
                   marginBottom: 12,
@@ -200,6 +229,7 @@ export default function Profile() {
                 onChangeText={setConfirmNewPass}
                 style={{
                   borderWidth: 1,
+                  borderColor: "#ddd",
                   borderRadius: 10,
                   padding: 12,
                   marginBottom: 12,
@@ -211,6 +241,7 @@ export default function Profile() {
                   style={{
                     color: message.includes("success") ? "green" : "red",
                     marginBottom: 10,
+                    textAlign: "center",
                   }}
                 >
                   {message}
@@ -242,7 +273,6 @@ export default function Profile() {
             </View>
           </View>
         )}
-
       </View>
     </LinearGradient>
   );

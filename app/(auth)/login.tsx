@@ -94,6 +94,7 @@ export default function Login() {
 
     await AsyncStorage.setItem("isLoggedIn", "true");
     await AsyncStorage.setItem("loggedEmail", existing.email); // CORECTAT: Folosim email, nu username
+    await AsyncStorage.setItem("loggedUsername", existing.name);
 
     if (rememberMe) {
       await AsyncStorage.setItem("autoLogin", "true");

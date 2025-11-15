@@ -5,7 +5,7 @@ export default function HomeHeader() {
   return (
     <View style={{ marginBottom: 24 }}>
       <ThemedText style={{ fontSize: 32}}>
-        Welcome!
+        Welcome to MoodTM!
       </ThemedText>
     </View>
   );

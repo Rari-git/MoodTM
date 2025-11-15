@@ -13,7 +13,7 @@ type WidgetCardProps = {
 
 export default function WidgetCard({ title, subtitle, icon, onPress }: WidgetCardProps) {
   const mood = useMood((s) => s.currentMood);
-  const colors = moodColors[mood].card;
+  const colors = moodColors[mood].background;
 
   return (
     <TouchableOpacity
