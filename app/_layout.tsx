@@ -1,7 +1,10 @@
 import { useFonts } from "expo-font";
+import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { useEffect } from 'react';
+import { Platform } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "../theme/ThemeContext";
 
 export default function RootLayout() {
@@ -10,18 +13,35 @@ export default function RootLayout() {
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
   });
 
+  useEffect(() => {
+    const setupNavigationBar = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          // Ascunde navigation bar-ul
+          await NavigationBar.setVisibilityAsync("hidden");
+          
+          // Setează comportamentul la swipe
+          await NavigationBar.setBehaviorAsync('overlay-swipe');
+          
+          // Opțional: setează culoarea
+          await NavigationBar.setBackgroundColorAsync('#00000000'); // Transparent
+        } catch (error) {
+          console.log('NavigationBar error:', error);
+        }
+      }
+    };
+
+    setupNavigationBar();
+  }, []);
+
   if (!loaded) return null;
 
   return (
     <ThemeProvider>
-      <View style={{ flex: 1 }}>
-        <StatusBar style="light" translucent />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-      </View>
+      <SafeAreaProvider>
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+        <Stack screenOptions={{ headerShown: false }} />
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

@@ -93,15 +93,10 @@ export default function Login() {
     }
 
     await AsyncStorage.setItem("isLoggedIn", "true");
-    await AsyncStorage.setItem("loggedUsername", existing.name);
-
-    if (rememberMe) {
-      await AsyncStorage.setItem("autoLogin", "true");
-    } else {
-      await AsyncStorage.removeItem("autoLogin");
-    }
-
-    router.replace("/(tabs)/home" as any);
+    await AsyncStorage.setItem("loggedEmail", email);
+    
+    // CORECT: Folosește replace cu ruta corectă
+    router.replace("/(tabs)/home");
   };
 
   const inputInnerStyle = {

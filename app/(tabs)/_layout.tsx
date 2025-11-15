@@ -18,7 +18,6 @@ export default function TabsLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* SWIPE VIEW */}
       <PagerView
         ref={pagerRef}
         style={{ flex: 1 }}
