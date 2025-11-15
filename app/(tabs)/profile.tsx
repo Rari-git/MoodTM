@@ -184,7 +184,7 @@ export default function Profile() {
                 borderRadius: 16,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}>
+              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 , textAlign: "center"}}>
                 Change Password
               </Text>
 
