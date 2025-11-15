@@ -93,9 +93,14 @@ export default function Login() {
     }
 
     await AsyncStorage.setItem("isLoggedIn", "true");
-    await AsyncStorage.setItem("loggedEmail", email);
-    
-    // CORECT: Folosește replace cu ruta corectă
+    await AsyncStorage.setItem("loggedEmail", existing.email); // CORECTAT: Folosim email, nu username
+
+    if (rememberMe) {
+      await AsyncStorage.setItem("autoLogin", "true");
+    } else {
+      await AsyncStorage.removeItem("autoLogin");
+    }
+
     router.replace("/(tabs)/home");
   };
 
@@ -109,7 +114,7 @@ export default function Login() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <LinearGradient colors={["#6A85FF", "#94B5FF"]} style={{ flex: 1, padding: 20 }}>
@@ -251,7 +256,7 @@ export default function Login() {
               }}
             >
               <Ionicons
-                name={rememberMe ? "checkbox-outline" : "square-outline"}
+                name={rememberMe ? "checkbox" : "square-outline"}
                 size={22}
                 color="#4c84ff"
               />
