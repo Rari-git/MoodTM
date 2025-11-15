@@ -1,5 +1,3 @@
-
-import { API_URL } from "@env";
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -7,9 +5,16 @@ import axios, {
 } from "axios";
 import * as SecureStore from "expo-secure-store";
 
-// --------------------------
-// Domain Models
-// --------------------------
+// ------------------------------------
+//  HARD-CODED BACKEND URL
+//  (înlocuiește cu URL-ul tău real)
+// ------------------------------------
+export const API_URL = "https://BACKEND-TAU.vercel.app"; 
+// exemplu: "https://moodtm-backend.vercel.app"
+
+// ------------------------------------
+// Domain Models (le păstrăm exact ca la tine)
+// ------------------------------------
 export interface LoginPayload {
   email: string;
   password: string;
@@ -31,49 +36,56 @@ export interface AuthResponse {
   user: User;
 }
 
-// Extend Axios config
+// Extend Axios Config
 export interface CustomAxiosConfig extends InternalAxiosRequestConfig {
-  silent?: boolean; // skip global 401 handling
+  silent?: boolean; // skip 401 global handling
 }
 
-// --------------------------
+// ------------------------------------
 // Axios Instance
-// --------------------------
+// ------------------------------------
 export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
-  timeout: 10_000,
+  timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
 
-// --------------------------
-// Request Interceptor
-// --------------------------
-api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-  const token = await SecureStore.getItemAsync("token");
+// ------------------------------------
+// Request Interceptor (Unauthorized / JWT)
+// ------------------------------------
+api.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const token = await SecureStore.getItemAsync("token");
 
-  if (token) {
-    config.headers.set("Authorization", `Bearer ${token}`);
+    if (token) {
+      config.headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    return config as CustomAxiosConfig;
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
   }
+);
 
-  return config as CustomAxiosConfig;
-});
-
-// --------------------------
-// Response Interceptor
-// --------------------------
+// ------------------------------------
+// Response Interceptor (Handle 401)
+// ------------------------------------
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ message?: string }>) => {
     const cfg = error.config as CustomAxiosConfig | undefined;
 
     if (error.response?.status === 401 && !cfg?.silent) {
-      console.log("401 unauthorized — redirect to login?");
-      // TODO: SecureStore.deleteItemAsync("token");
-      // TODO: navigation.reset('/login');
+      console.log("❌ 401 Unauthorized — user must re-login");
+
+      // Exemplu:
+      // await SecureStore.deleteItemAsync("token");
+      // router.replace("/(auth)/login");
     }
 
     return Promise.reject(error);
   }
 );
 
-
+export default api;
