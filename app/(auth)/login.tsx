@@ -87,7 +87,7 @@ export default function Login() {
     await AsyncStorage.setItem("loggedEmail", email);
     
     // CORECT: Folosește replace cu ruta corectă
-    router.replace("/(tabs)/home");
+    router.replace("/(tabs)/home" as any);
   };
 
   // style folosit pentru interiorul inputurilor
