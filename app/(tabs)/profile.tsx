@@ -17,7 +17,6 @@ export default function Profile() {
   const mood = useMood((state) => state.mood);
   const bgColors = moodColors[mood].background;
 
-  // modal state pentru schimbare parolă
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -25,7 +24,6 @@ export default function Profile() {
   const [message, setMessage] = useState("");
   const [currentUser, setCurrentUser] = useState<StoredUser | null>(null);
 
-  // Căutăm userul logat
   useEffect(() => {
     const loadUser = async () => {
       const stored = await AsyncStorage.getItem("users");
@@ -41,14 +39,12 @@ export default function Profile() {
     loadUser();
   }, []);
 
-  // LOGOUT
   const handleLogout = async () => {
     await AsyncStorage.removeItem("isLoggedIn");
     await AsyncStorage.removeItem("loggedEmail");
     router.replace("/(auth)/login");
   };
 
-  // Change password logic
   const handlePasswordChange = async () => {
     if (!oldPass || !newPass || !confirmNewPass) {
       setMessage("All fields are required.");
@@ -75,7 +71,6 @@ export default function Profile() {
       return;
     }
 
-    // update user
     const stored = await AsyncStorage.getItem("users");
     const users: StoredUser[] = stored ? JSON.parse(stored) : [];
 
@@ -119,17 +114,6 @@ export default function Profile() {
         {/* OPTIONS */}
         <View style={{ marginTop: 32, gap: 16 }}>
 
-          {/* Edit Profile */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: "rgba(255,255,255,0.2)",
-              padding: 16,
-              borderRadius: 14,
-            }}
-          >
-            <ThemedText style={{ fontSize: 18 }}>Edit Profile</ThemedText>
-          </TouchableOpacity>
-
           {/* Change Password */}
           <TouchableOpacity
             onPress={() => setShowPasswordModal(true)}
@@ -156,7 +140,7 @@ export default function Profile() {
 
         </View>
 
-        {/* MODAL PENTRU PAROLĂ */}
+        {/* PASSWORD MODAL */}
         {showPasswordModal && (
           <View
             style={{
@@ -179,7 +163,7 @@ export default function Profile() {
                 borderRadius: 16,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 , textAlign: "center"}}>
+              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}>
                 Change Password
               </Text>
 
