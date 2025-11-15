@@ -1,17 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 export default function Start() {
-  const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [route, setRoute] = useState<"/onboarding" | "/(auth)/login" | "/(tabs)/home" | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Așteaptă puțin pentru a evita flash-ul prea rapid
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         const firstTime = await AsyncStorage.getItem("firstTime");
@@ -25,7 +23,7 @@ export default function Start() {
         } else if (isLoggedIn !== "true") {
           setRoute("/(auth)/login");
         } else {
-          setRoute("/(tabs)/home");
+          setRoute("/(tabs)/home"); // Corectat de la /home la /(tabs)/home
         }
       } catch (e) {
         console.error("Error checking auth:", e);

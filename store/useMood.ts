@@ -1,6 +1,6 @@
 import { Mood } from "@/constants/moodColors";
 import { create } from "zustand";
-import { MoodEntry, moodService, MoodType } from "../api/moodService";
+import { MoodEntry, moodService, MoodType } from "../app/api/moodService";
 
 interface MoodStore {
   moods: MoodEntry[];
