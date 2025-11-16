@@ -100,13 +100,16 @@ export default function Register() {
 }
 
 // Folosim aceleași stiluri ca la Login pentru consistență
+// Folosim aceleași stiluri ca la Login pentru consistență
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    justifyContent: 'center', 
+    // AM SCOS 'justifyContent: 'center'' DE AICI
     padding: 20, 
   },
   kav: {
+    flex: 1, // <-- AM ADĂUGAT ACEASTĂ LINIE
+    justifyContent: 'center', // <-- AM ADĂUGAT ACEASTĂ LINIE
     width: '100%',
     alignItems: 'center',
   },

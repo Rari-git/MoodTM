@@ -1,4 +1,3 @@
-// app/(auth)/login.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
@@ -84,13 +83,16 @@ export default function Login() {
 }
 
 // Stiluri noi, mai atractive
+// Stiluri noi, mai atractive
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    justifyContent: 'center', 
+    // AM SCOS 'justifyContent: 'center'' DE AICI
     padding: 20, 
   },
   kav: {
+    flex: 1, // <-- AM ADĂUGAT ACEASTĂ LINIE
+    justifyContent: 'center', // <-- AM ADĂUGAT ACEASTĂ LINIE
     width: '100%',
     alignItems: 'center',
   },
