@@ -7,12 +7,12 @@ import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, Tou
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Register() {
-  const { login } = useAuth();
+  const { register } = useAuth(); // <-- Am schimbat din 'login' în 'register'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async () => { // <-- Funcția devine async
     if (!email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
@@ -22,10 +22,23 @@ export default function Register() {
       return;
     }
     
-    // TODO: Logica de înregistrare pe server
-    // Simulăm înregistrare și login automat
-    const fakeToken = "dummy-auth-token-54321";
-    login(fakeToken);
+    try {
+      // TODO: Logica de înregistrare pe server
+      // Acum apelăm funcția reală de register!
+      await register(email, password);
+      // Nu mai e nevoie de 'login(fakeToken)',
+      // 'onAuthStateChanged' din context ne va redirecționa automat.
+    } catch (error: any) {
+      // Gestionăm erorile de la Firebase
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('Error', 'This email is already in use.');
+      } else if (error.code === 'auth/weak-password') {
+        Alert.alert('Error', 'Password should be at least 6 characters.');
+      } else {
+        Alert.alert('Error', 'An error occurred during registration.');
+        console.error(error);
+      }
+    }
   };
 
   return (

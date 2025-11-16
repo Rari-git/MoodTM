@@ -10,17 +10,26 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Aici ar trebui să fie logica ta de validare
+  const handleLogin = async () => { // <-- Funcția devine async
     if (!email || !password) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
     
-    // TODO: Verifică username/parola cu serverul tău
-    // Aici doar simulăm un login cu succes
-    const fakeToken = "dummy-auth-token-12345";
-    login(fakeToken); 
+    try {
+      // TODO: Verifică username/parola cu serverul tău
+      // Acum apelăm funcția reală de login!
+      await login(email, password);
+      // 'onAuthStateChanged' ne va redirecționa automat.
+    } catch (error: any) {
+      // Gestionăm erorile de la Firebase
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+        Alert.alert('Error', 'Invalid email or password.');
+      } else {
+        Alert.alert('Error', 'An error occurred during login.');
+        console.error(error);
+      }
+    }
   };
 
   return (

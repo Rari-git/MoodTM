@@ -1,18 +1,20 @@
 // contexts/AuthContext.tsx
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useSegments } from 'expo-router';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { auth } from '../firebaseConfig'; // <-- Importăm auth-ul nostru configurat
 
+// Interfața se schimbă: nu mai stocăm token, ci obiectul User de la Firebase
 interface AuthContextProps {
-  token: string | null;
+  user: User | null; // <-- Am schimbat din 'token' în 'user'
   isLoading: boolean;
-  login: (token: string) => Promise<void>;
+  login: (email: string, pass: string) => Promise<any>;
+  register: (email: string, pass: string) => Promise<any>;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-// Hook personalizat pentru a folosi contextul
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -21,60 +23,62 @@ export const useAuth = () => {
   return context;
 };
 
-// Provider-ul
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    // 1. Verifică dacă există un token salvat
-    (async () => {
-      try {
-        const savedToken = await AsyncStorage.getItem('user_token');
-        if (savedToken) {
-          setToken(savedToken);
-        }
-      } catch (e) {
-        console.error("Failed to load auth token", e);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
+    // 1. Ne abonăm la starea de autentificare Firebase
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Setează utilizatorul (sau null dacă e delogat)
+      setIsLoading(false);
+    });
+
+    // Curățăm abonarea când componenta se demolează
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    // 2. Logica de "Gatekeeper"
-    if (isLoading) return; // Nu face nimic cât timp se încarcă
+    // 2. Logica de "Gatekeeper" (rămâne aproape la fel)
+    if (isLoading) return; 
 
     const inAuthGroup = segments[0] === '(auth)';
 
-    if (token && inAuthGroup) {
+    if (user && inAuthGroup) {
       // Utilizator logat, dar pe ecran de login -> trimite la app
       router.replace('/'); 
-    } else if (!token && !inAuthGroup) {
+    } else if (!user && !inAuthGroup) {
       // Utilizator nelogat, dar pe ecran privat -> trimite la login
       router.replace('/(auth)/login');
     }
 
-  }, [token, isLoading, segments, router]);
+  }, [user, isLoading, segments, router]); // <-- Am înlocuit 'token' cu 'user'
 
-  const login = async (newToken: string) => {
-    // Salvează token-ul în state și în storage
-    setToken(newToken);
-    await AsyncStorage.setItem('user_token', newToken);
-    router.replace('/'); // Redirecționează la app
+  // Funcția de login acum apelează Firebase
+  const login = async (email: string, pass: string) => {
+    setIsLoading(true);
+    // Nu mai avem nevoie de setToken sau AsyncStorage, Firebase gestionează asta
+    return signInWithEmailAndPassword(auth, email, pass)
+      .finally(() => setIsLoading(false));
+  };
+
+  // Funcție nouă pentru register
+  const register = async (email: string, pass: string) => {
+    setIsLoading(true);
+    return createUserWithEmailAndPassword(auth, email, pass)
+      .finally(() => setIsLoading(false));
   };
 
   const logout = async () => {
-    setToken(null);
-    await AsyncStorage.removeItem('user_token');
-    router.replace('/(auth)/login'); // Redirecționează la login
+    await signOut(auth);
+    // Nu mai trebuie să ștergem manual token-ul
+    // onAuthStateChanged va detecta schimbarea și va seta user=null
   };
 
   return (
-    <AuthContext.Provider value={{ token, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
