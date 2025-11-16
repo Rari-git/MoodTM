@@ -3,27 +3,47 @@ import * as NavigationBar from "expo-navigation-bar";
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { AuthProvider } from "../contexts/AuthContext"; // <-- 1. Importă AuthProvider
-import { MoodProvider } from "../contexts/MoodContext";
+import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import { MoodProvider, useMood } from "../contexts/MoodContext";
 
 // Previne ascunderea automată a SplashScreen-ului
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  
-  // Logica pentru immersive mode (rămâne la fel)
+function RootLayoutNav() {
+  const { isLoading: isAuthLoading } = useAuth();
+  const { isLoading: isMoodLoading } = useMood();
+
+  useEffect(() => {
+    // Ascunde SplashScreen DOAR când AMBELE contexte s-au încărcat
+    if (!isAuthLoading && !isMoodLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [isAuthLoading, isMoodLoading]);
+
   useEffect(() => {
     NavigationBar.setVisibilityAsync("hidden");
   }, []);
 
+  // Nu randa nimic (păstrează SplashScreen vizibil)
+  // până când contextele sunt gata.
+  if (isAuthLoading || isMoodLoading) {
+    return null;
+  }
+
+  // Acum e sigur să randăm restul aplicației
   return (
-    // 2. Îmbracă totul în AuthProvider (exterior)
+    <>
+      <StatusBar hidden />
+      <Slot /> 
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
     <AuthProvider>
-      {/* 3. MoodProvider în interior */}
       <MoodProvider>
-        <StatusBar hidden />
-        {/* Slot va randa grupul (app) sau (auth) */}
-        <Slot /> 
+        <RootLayoutNav />
       </MoodProvider>
     </AuthProvider>
   );

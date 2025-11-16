@@ -1,8 +1,7 @@
-// contexts/MoodContext.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Asset } from 'expo-asset'; // <-- AM ADĂUGAT IMPORTUL PENTRU 'Asset'
+import { Asset } from 'expo-asset';
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { MoodType, moodConfig } from '../constants/moods'; // <-- AM ADĂUGAT 'moodConfig'
+import { MoodType, moodConfig } from '../constants/moods';
 
 interface MoodContextProps {
   mood: MoodType;
@@ -16,34 +15,38 @@ export const MoodProvider = ({ children }: { children: ReactNode }) => {
   const [mood, setMood] = useState<MoodType>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // AICI ESTE MODIFICAREA PRINCIPALĂ
   useEffect(() => {
     (async () => {
       try {
-        // 1. Creăm lista de imagini (la fel ca înainte)
+        // 1. Creăm lista de imagini
         const imagesToLoad = [
           require('../assets/images/background/backgroundChangeMood.png'),
           ...Object.values(moodConfig).map(config => config.background)
         ];
 
-        // 2. Creăm promisiunea DOAR pentru imagini
+        // 2. Creăm promisiunea pentru imagini
         const loadAssetsPromise = Asset.loadAsync(imagesToLoad);
 
-        // 3. Așteptăm DOAR imaginile
-        await loadAssetsPromise;
+        // 3. Creăm promisiunea pentru încărcarea stării salvate
+        const loadStoragePromise = AsyncStorage.getItem("mood");
 
-        // 4. Am ȘTERS logica pentru 'loadStoragePromise' și 'savedMood'
+        // 4. Așteptăm AMBELE promisiuni
+        const [savedMood] = await Promise.all([loadStoragePromise, loadAssetsPromise]);
+
+        // 5. Setăm starea dacă există o stare salvată
+        if (savedMood) {
+          setMood(savedMood as MoodType);
+        }
 
       } catch (e) {
-        console.error("Failed to load assets.", e); // Mesaj de eroare actualizat
+        console.error("Failed to load assets or saved mood.", e);
       } finally {
-        // 5. Oprim încărcarea
+        // 6. Oprim încărcarea
         setIsLoading(false);
       }
     })();
-  }, []); // [] asigură că rulează o singură dată
+  }, []);
 
-  // Funcția de salvare a stării (rămâne neschimbată)
   const selectMood = async (selectedMood: string) => {
     try {
       await AsyncStorage.setItem("mood", selectedMood);
@@ -60,7 +63,6 @@ export const MoodProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook-ul personalizat (rămâne neschimbat)
 export const useMood = () => {
   const context = useContext(MoodContext);
   if (context === undefined) {

@@ -17,8 +17,7 @@ export default function Login() {
     }
     
     try {
-      // TODO: Verifică username/parola cu serverul tău
-      // Acum apelăm funcția reală de login!
+      // Apelăm funcția reală de login!
       await login(email, password);
       // 'onAuthStateChanged' ne va redirecționa automat.
     } catch (error: any) {

@@ -23,11 +23,9 @@ export default function Register() {
     }
     
     try {
-      // TODO: Logica de înregistrare pe server
-      // Acum apelăm funcția reală de register!
+      // Apelăm funcția reală de register!
       await register(email, password);
-      // Nu mai e nevoie de 'login(fakeToken)',
-      // 'onAuthStateChanged' din context ne va redirecționa automat.
+      // 'onAuthStateChanged' ne va redirecționa automat.
     } catch (error: any) {
       // Gestionăm erorile de la Firebase
       if (error.code === 'auth/email-already-in-use') {

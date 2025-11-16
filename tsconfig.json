@@ -5,6 +5,10 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      // Add this line below
+      "@firebase/auth": [
+        "./node_modules/@firebase/auth/dist/index.rn.d.ts"
       ]
     }
   },
